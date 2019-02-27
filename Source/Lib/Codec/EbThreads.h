@@ -99,7 +99,6 @@ extern    EB_BOOL                  alternateGroups;
 #include <pthread.h>
 #ifdef __APPLE__
 #include <unistd.h>
-#include <sys/sysinfo.h>
 long cpu_set_t = 4;
 #else
 extern    cpu_set_t                   groupAffinity;
