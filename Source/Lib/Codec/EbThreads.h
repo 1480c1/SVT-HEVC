@@ -99,7 +99,7 @@ extern    EB_BOOL                  alternateGroups;
 #include <pthread.h>
 #ifdef __APPLE__
 #include <unistd.h>
-long cpu_set_t = sysconf(_SC_NPROCESSORS_ONLN);
+long cpu_set_t = get_nprocs();
 #else
 extern    cpu_set_t                   groupAffinity;
 #endif
