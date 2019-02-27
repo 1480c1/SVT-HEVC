@@ -16,7 +16,7 @@ include_directories(${PROJECT_SOURCE_DIR}/Source/Lib/ASM_AVX2/)
 
 link_directories(${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SSSE3/)
 
-if(CMAKE_C_COMPILER_ID STREQUAL "GNU|Clang")
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mavx2")
     if(CMAKE_C_COMPILER_VERSION VERSION_EQUAL 5.4)
         string(REPLACE "-flto" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
