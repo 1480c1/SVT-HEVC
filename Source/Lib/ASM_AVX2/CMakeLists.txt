@@ -1,7 +1,7 @@
-# 
+#
 # Copyright(c) 2018 Intel Corporation
 # SPDX - License - Identifier: BSD - 2 - Clause - Patent
-# 
+#
 
 # ASM_AVX2 Directory CMakeLists.txt
 
@@ -27,6 +27,10 @@ if(CMAKE_C_COMPILER_ID STREQUAL "Intel")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -static-intel /W0 /Qwd10148 /Qwd10010 /Qwd10157")
 endif()
 
+if(APPLE)
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mxsave")
+endif()
+
 add_library(ASM_AVX2 STATIC
     EbCombinedAveragingSAD_Intrinsic_AVX2.h
     EbCombinedAveragingSAD_Intrinsic_AVX512.h
@@ -49,4 +53,3 @@ add_library(ASM_AVX2 STATIC
     EbPictureOperators_Intrinsic_AVX2.c
     EbTransforms_Intrinsic_AVX2.c
 )
-
