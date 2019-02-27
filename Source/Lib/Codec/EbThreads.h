@@ -97,7 +97,12 @@ extern    EB_BOOL                  alternateGroups;
 #define _GNU_SOURCE
 #include <sched.h>
 #include <pthread.h>
+#ifdef __APPLE__
+#include <unistd.h>
+long cpu_set_t = sysconf(_SC_NPROCESSORS_ONLN);
+#else
 extern    cpu_set_t                   groupAffinity;
+#endif
 #define EB_CREATETHREAD(type, pointer, nElements, pointerClass, threadFunction, threadContext) \
     pointer = EbCreateThread(threadFunction, threadContext); \
     if (pointer == (type)EB_NULL) { \
