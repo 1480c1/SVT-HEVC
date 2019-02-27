@@ -1,7 +1,7 @@
-# 
+#
 # Copyright(c) 2018 Intel Corporation
 # SPDX - License - Identifier: BSD - 2 - Clause - Patent
-# 
+#
 
 # ASM_SSE4.1 Directory CMakeLists.txt
 
@@ -14,7 +14,7 @@ include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SSSE3/)
 include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SSE4_1/)
 include_directories (${PROJECT_SOURCE_DIR}/Source/Lib/ASM_AVX2/)
 
-if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -msse4.1")
 endif()
 
@@ -31,6 +31,3 @@ add_library(ASM_SSE4_1 STATIC
     EbPictureOperators_Intrinsic_SSE4_1.c
     EbTransforms_Intrinsic_SSE4_1.c
 )
-
-
-
