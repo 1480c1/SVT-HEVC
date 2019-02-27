@@ -77,7 +77,7 @@ if(CMAKE_C_COMPILER_ID MATCHES "GNU|Clang")
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows") #for Mingw64 support, see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65782
         set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fno-asynchronous-unwind-tables")
         if(CMAKE_C_COMPILER_ID STREQUAL "Clang")
-            string(REPLACE "-fPIC" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+            string(REPLACE "-fPIE -fPIC " "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
         endif()
     endif()
     set(CMAKE_C_FLAGS_RELEASE "-O2")
