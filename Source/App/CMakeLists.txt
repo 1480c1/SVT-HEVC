@@ -37,4 +37,4 @@ if(UNIX)
         rt)
 endif()
 
-install(TARGETS SvtHevcEncApp RUNTIME DESTINATION bin)
+install(TARGETS SvtHevcEncApp RUNTIME DESTINATION ${CMAKE_INSTALL_FULL_BINDIR})
