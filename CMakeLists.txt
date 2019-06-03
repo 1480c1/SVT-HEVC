@@ -6,6 +6,10 @@ if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
                     "Please use the Build folder or create your own.")
 endif()
 
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
 project(${project_name} C ASM_NASM)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
