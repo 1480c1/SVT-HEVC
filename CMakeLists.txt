@@ -20,27 +20,10 @@ project(${project_name} C ASM_NASM)
 include(GNUInstallDirs)
 include(CheckCCompilerFlag)
 
-if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-    if(NOT CMAKE_BUILD_TYPE)
-        set(CMAKE_BUILD_TYPE Release)
-    endif()
-    message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
-endif()
-
-if(NOT CMAKE_C_COMPILER)
-    set(CMAKE_C_COMPILER gcc)
-endif()
+message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
 message(STATUS "CMAKE_C_COMPILER = ${CMAKE_C_COMPILER}")
-
-if(NOT MAKE_ASM_NASM_COMPILER)
-    set(CMAKE_ASM_NASM_COMPILER yasm)
-endif()
 message(STATUS "CMAKE_ASM_NASM_COMPILER = ${CMAKE_ASM_NASM_COMPILER}")
-
-SET(CMAKE_AR  "gcc-ar")
 message(STATUS "CMAKE_AR = ${CMAKE_AR}")
-
-SET(CMAKE_RANLIB  "gcc-ranlib")
 message(STATUS "CMAKE_RANLIB = ${CMAKE_RANLIB}")
 
 if(NOT DEFINED CMAKE_INSTALL_PREFIX OR CMAKE_INSTALL_PREFIX STREQUAL "")
