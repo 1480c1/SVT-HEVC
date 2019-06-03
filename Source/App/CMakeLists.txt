@@ -12,7 +12,7 @@ include_directories(${PROJECT_SOURCE_DIR}/Source/API/
     ${PROJECT_SOURCE_DIR}/Bin/${CMAKE_BUILD_TYPE}/)
 
 # App Source Files
-add_executable (SvtHevcEncApp
+add_executable(SvtHevcEncApp
     EbAppConfig.c
     EbAppContext.c
     EbAppFifo.c
@@ -23,8 +23,7 @@ add_executable (SvtHevcEncApp
     EbAppConfig.h
     EbAppContext.h
     ../API/EbErrorCodes.h
-    ../API/EbTime.h
-)
+    ../API/EbTime.h)
 
 #********** SET COMPILE FLAGS************
 
