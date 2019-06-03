@@ -146,6 +146,8 @@ if(WIN32 OR MSYS)
 else()
     option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
 endif()
+option(COVERAGE "Generate coverage report")
+option(BUILD_APP "Build Enc App" ON)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     set(CMAKE_ASM_NASM_OBJECT_FORMAT macho64)
@@ -189,5 +191,8 @@ if(CMAKE_COMPILER_IS_GNUCXX)
 endif()
 
 # Add Subdirectories
-add_subdirectory (Source/Lib)
-add_subdirectory (Source/App)
+add_subdirectory(Source/Lib)
+if(BUILD_APP)
+    add_subdirectory(Source/App)
+endif()
+
