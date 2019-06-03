@@ -10,6 +10,11 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
+find_program(YASM_EXE yasm)
+if(YASM_EXE AND NOT CMAKE_ASM_NASM_COMPILER MATCHES "yasm")
+    set(CMAKE_ASM_NASM_COMPILER ${YASM_EXE})
+endif()
+
 project(${project_name} C ASM_NASM)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
