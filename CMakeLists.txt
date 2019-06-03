@@ -17,6 +17,9 @@ endif()
 
 project(${project_name} C ASM_NASM)
 
+include(GNUInstallDirs)
+include(CheckCCompilerFlag)
+
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
     if(NOT CMAKE_BUILD_TYPE)
         set(CMAKE_BUILD_TYPE Release)
