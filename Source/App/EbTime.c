@@ -16,6 +16,8 @@
 //#endif
 #endif
 
+#include "EbTime.h"
+
 void EbAppStartTime(
     uint64_t *Startseconds,
     uint64_t *Startuseconds)
