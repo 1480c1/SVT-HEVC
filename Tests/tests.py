@@ -38,9 +38,9 @@ def parse_args(*args):
             print_help()
 
 
-def get_pix_fmt(pix_fmt, gst_or_ffmpeg):
+def get_pix_fmt(pix_fmt):
     """Convert pix_fmt of chromaBit to either gst format or ffmpeg"""
-    if gst_or_ffmpeg == "gst":
+    if GST_LAUNCH:
         gst_pix_fmts = {
             "420": "I420",
             "42010": "I420_10LE",
@@ -149,9 +149,7 @@ def generate_video(width=7680, height=4320, bit_depth=8, fps=25, pix_fmt="420"):
             [GST_LAUNCH, "videotestsrc", "num-buffers={}".format(10 * fps),
              "!", "video/x-raw,", "framerate={}/1,".format(fps),
              "width={},".format(width), "height={}".format(height),
-             "!", "filesink", "location={}".format(output_file)],
-            stderr=dev_null,
-            stdout=dev_null)
+             "!", "filesink", "location={}".format(output_file)])
     else:
         print("using ffmpeg")
         exit_code = subprocess.call(
@@ -159,8 +157,7 @@ def generate_video(width=7680, height=4320, bit_depth=8, fps=25, pix_fmt="420"):
              "-f", "lavfi", "-i",
              "testsrc=duration=10:size={}x{}:rate={}".format(
                  width, height, fps),
-             "-pix_fmt", "yuv420p", output_file],
-            stderr=dev_null)
+             "-pix_fmt", "yuv420p", output_file])
 
     dev_null.close()
     if exit_code != 0:
@@ -210,6 +207,9 @@ TAPPDEC = exec_exists("TAppDecoder")
 GST_LAUNCH = exec_exists("gst-launch-1.0")
 FFMPEG_EXEC = exec_exists("ffmpeg")
 
+if not (GST_LAUNCH or FFMPEG_EXEC):
+    print("Can't find gst-launch-1.0 or ffmpeg")
+    sys.exit(2)
 signal.signal(signal.SIGINT, signal_handler)  # Capture ctrl + c
 
 generate_video()
