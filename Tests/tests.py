@@ -13,6 +13,7 @@ import errno
 import hashlib
 import multiprocessing
 import os
+import getopt
 import platform
 import signal
 import subprocess
@@ -29,13 +30,29 @@ def print_help():
     print()
 
 
-def parse_args(*args):
-    for arg in args:
-        print("arg")
-        if arg == "help" or \
-            arg == "h" or \
-                arg == "-h":
+def parse_args(argv):
+    try:
+        opts, args = getopt.getopt(
+            argv, "ht:", ["fast", "Fast", "nightly", "Nightly", "full", "Full"])
+    except getopt.GetoptError:
+        VALIDATION_TEST_MODE = 0
+    for opt, arg in opts:
+        if opt == '-h':
             print_help()
+            sys.exit()
+        elif opt in ("-t"):
+            if arg in ("fast", "Fast"):
+                VALIDATION_TEST_MODE = 0
+            elif arg in ("nightly", "Nightly"):
+                VALIDATION_TEST_MODE = 1
+            elif arg in ("full", "Full"):
+                VALIDATION_TEST_MODE = 2
+        elif opt in ("fast", "Fast"):
+            VALIDATION_TEST_MODE = 0
+        elif opt in ("nightly", "Nightly"):
+            VALIDATION_TEST_MODE = 1
+        elif opt in ("full", "Full"):
+            VALIDATION_TEST_MODE = 2
 
 
 def get_pix_fmt(pix_fmt):
