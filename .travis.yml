@@ -45,7 +45,6 @@ install:
   - pip install --user cpp-coveralls
   - export PATH=/Users/travis/Library/Python/2.7/bin:${PATH}
   - if [ $TRAVIS_OS_NAME = osx ]; then ulimit -n 512; fi
-  #- if [ $TRAVIS_OS_NAME = osx ]; then brew install --HEAD valgrind; fi
 script:
   - &base_script |
     cd $TRAVIS_BUILD_DIR/Build/linux/$build_type
@@ -65,10 +64,11 @@ matrix:
     - env: COVERALLS_PARALLEL=true build_type=debug CMAKE_EFLAGS="-DCOVERAGE=ON"
   exclude:
     - os: osx
-      compiler: gcc # gcc = clang in macOS, unecessary duplicate
+      compiler: gcc
+      # gcc = clang in macOS, unecessary duplicate
   include:
-  # valgrind --tool=memcheck --leak-check=yes --show-reachable=yes ./SvtHevcEncApp -help
-  # Coding style check
+    # valgrind --tool=memcheck --leak-check=yes --show-reachable=yes ./SvtHevcEncApp -help
+    # Coding style check
     - name: Style check
       stage: style
       addons: skip
@@ -98,7 +98,7 @@ matrix:
               fi;
           done
         - test -z "$IS_FAIL"
-   # FFmpeg interation build
+    # FFmpeg interation build
     - name: FFmpeg patch
       stage: test
       compiler: gcc
@@ -110,7 +110,7 @@ matrix:
         - git clone https://github.com/FFmpeg/FFmpeg --branch release/4.1 --depth=1 ffmpeg && cd ffmpeg
         - git am $TRAVIS_BUILD_DIR/ffmpeg_plugin/0001-lavc-svt_hevc-add-libsvt-hevc-encoder-wrapper.patch
         # Patch 2 is doc only
-        #- git am $TRAVIS_BUILD_DIR/ffmpeg_plugin/0002-doc-Add-libsvt_hevc-encoder-docs.patch
+        # $TRAVIS_BUILD_DIR/ffmpeg_plugin/0002-doc-Add-libsvt_hevc-encoder-docs.patch
         - export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/lib PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig
         - "sudo chown -R travis: $HOME/.ccache"
         - ./configure --enable-libsvthevc || tail ffbuild/config.log
