@@ -76,11 +76,12 @@ matrix:
       install: skip
       script:
         - git grep -InP --heading "\t|\r| $" -- .  && IS_FAIL=true || true
-        - git grep -I -l -z "" -- . | while IFS= read -r -d '' i; do
-              if [ -n "$(tail -c 1 "$i")" ]; then
-                  echo "No newline at end of $i";
-                  IS_FAIL=true;
-              fi;
+        - |
+          for i in $(git grep -I -l "" -- .); do
+            if test -n "$(tail -c 1 "$i")"; then
+              echo "No newline at end of $i"
+              IS_FAIL=true
+            fi
           done
         - git remote rm upstream 2> /dev/null || true
         - git remote add upstream https://github.com/OpenVisualCloud/SVT-HEVC.git
