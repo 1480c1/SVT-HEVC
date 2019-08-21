@@ -86,17 +86,18 @@ matrix:
         - git remote rm upstream 2> /dev/null || true
         - git remote add upstream https://github.com/OpenVisualCloud/SVT-HEVC.git
         - git fetch -q upstream master
-        - for i in $(git rev-list HEAD ^upstream/master); do
-              echo "Checking commit message of $i";
-              msg="$(git log --format=%B -n 1 $i)";
-              if [ -n "$(echo "$msg" | awk "NR==2")" ]; then
-                  echo "Malformed commit message in $i, second line must be empty";
-                  IS_FAIL=true;
-              fi;
-              if echo "$msg" | head -1 | grep -q '\.$'; then
-                  echo "Malformed commit message in $i, trailing period in subject line";
-                  IS_FAIL=true;
-              fi;
+        - |
+          for i in $(git rev-list HEAD ^upstream/master); do
+            printf 'Checking commit message of %s' "$i"
+            if test -n "$(git log --format=%B -n 1 $i | sed -n 2p)"; then
+              printf ', second line must be empty'
+              IS_FAIL=true
+            fi
+            if test "$(git log --format=%B -n 1 $i | head -n 1 | tail -c 2)" = "."; then
+              printf ', trailing period in subject line'
+              IS_FAIL=true
+            fi
+            echo
           done
         - test -z "$IS_FAIL"
     # FFmpeg interation build
