@@ -54,7 +54,7 @@ install:
 script:
   - &base_script |
     cd $TRAVIS_BUILD_DIR/Build/linux/$build_type
-    cmake $TRAVIS_BUILD_DIR -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=$build_type ${CMAKE_EFLAGS[@]}
+    cmake $TRAVIS_BUILD_DIR -G"Unix Makefiles" -DCMAKE_C_COMPILER_LAUNCHER=ccache  -DCMAKE_BUILD_TYPE=$build_type ${CMAKE_EFLAGS[@]}
     cmake -j $(if [ $TRAVIS_OS_NAME = osx ]; then sysctl -n hw.ncpu; else nproc; fi) --build . &&
     $(command -v sudo && echo "sudo") cmake --build . --target install && cd $TRAVIS_BUILD_DIR
   - SvtHevcEncApp -encMode 9 -i akiyo_cif.y4m -b test1.h265
