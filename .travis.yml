@@ -11,13 +11,10 @@ compiler:
 addons:
   apt:
     packages:
-      - cmake
       - yasm
       - valgrind
       - libgstreamer-plugins-base1.0-dev
       - libgstreamer1.0-dev
-      - llvm
-      - clang
   homebrew:
     packages:
       - ccache
