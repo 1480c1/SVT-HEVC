@@ -61,7 +61,7 @@ script:
     $(command -v sudo && echo "sudo") cmake --build . --target install && cd $TRAVIS_BUILD_DIR
   - SvtHevcEncApp -encMode 9 -i akiyo_cif.y4m -b test1.h265
 before_cache:
-  - "sudo chown -R travis: $HOME/.ccache"
+  - "$(command -v sudo && echo 'sudo') chown -R travis: $HOME/.ccache"
 matrix:
   fast_finish: true
   allow_failures:
