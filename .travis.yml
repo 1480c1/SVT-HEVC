@@ -3,6 +3,7 @@ cache: ccache
 os:
   - linux
   - osx
+  - windows
 dist: xenial
 osx_image: xcode10.2
 compiler:
@@ -39,6 +40,14 @@ before_install:
   - tar xf video.tar.gz
   - mkdir -p $TRAVIS_BUILD_DIR/Build/linux/$build_type
 install:
+  - |
+    if [ "$TRAVIS_OS_NAME" = "windows" ]; then
+      curl http://repo.msys2.org/distrib/msys2-x86_64-latest.tar.xz -o $TRAVIS_BUILD_DIR/msys2-base.tar.xz
+      7z x -aoa msys2-base.tar.xz
+      7z x -aoa msys2-base.tar -oC:/
+      powershell -command Start-Process -NoNewWindows -Wait -FilePath "C:/msys2/usr/bin/bash" -ArgumentList "-lc", "exit"
+      powershell -command Start-Process -NoNewWindows -Wait -FilePath "C:/msys2/usr/bin/bash" -ArgumentList "-lc", "'pacman -Sy --noconfirm --ask=20 --needed mingw-w64-x86_64-yasm mingw-w64-x86_64-ccache mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc make mingw-w64-x86_64-clang'"
+  - PATH="/c/msys64/mingw64/bin:$PATH"
   - pip install --user cpp-coveralls
   - export PATH=/Users/travis/Library/Python/2.7/bin:${PATH}
   - if [ $TRAVIS_OS_NAME = osx ]; then ulimit -n 512; fi
@@ -47,7 +56,7 @@ script:
     cd $TRAVIS_BUILD_DIR/Build/linux/$build_type
     cmake $TRAVIS_BUILD_DIR -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=$build_type ${CMAKE_EFLAGS[@]}
     cmake -j $(if [ $TRAVIS_OS_NAME = osx ]; then sysctl -n hw.ncpu; else nproc; fi) --build . &&
-    sudo cmake --build . --target install && cd $TRAVIS_BUILD_DIR
+    $(command -v sudo && echo "sudo") cmake --build . --target install && cd $TRAVIS_BUILD_DIR
   - SvtHevcEncApp -encMode 9 -i akiyo_cif.y4m -b test1.h265
 before_cache:
   - "sudo chown -R travis: $HOME/.ccache"
