@@ -46,8 +46,8 @@ install:
       curl http://repo.msys2.org/distrib/msys2-x86_64-latest.tar.xz -o $TRAVIS_BUILD_DIR/msys2-base.tar.xz
       7z x -aoa msys2-base.tar.xz
       7z x -aoa msys2-base.tar -oC:/
-      powershell -command Start-Process -NoNewWindows -Wait -FilePath "C:/mmsys64/usr/bin/bash" -ArgumentList \"-lc\", \"exit\"
-      powershell -command Start-Process -NoNewWindows -Wait -FilePath \"C:/msys64/usr/bin/bash\" -ArgumentList \"-lc\", \"'pacman -Sy --noconfirm --ask=20 --needed mingw-w64-x86_64-yasm mingw-w64-x86_64-ccache mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc make mingw-w64-x86_64-clang'\"
+      powershell -command Start-Process -NoNewWindow -Wait -FilePath "C:/mmsys64/usr/bin/bash" -ArgumentList \"-lc\", \"exit\"
+      powershell -command Start-Process -NoNewWindow -Wait -FilePath \"C:/mmsys64/usr/bin/bash" -ArgumentList \"-lc\", \"'pacman -Sy --noconfirm --ask=20 --needed mingw-w64-x86_64-yasm mingw-w64-x86_64-ccache mingw-w64-x86_64-cmake mingw-w64-x86_64-gcc make mingw-w64-x86_64-clang'\"
     fi
   - PATH="/c/msys64/mingw64/bin:$PATH"
   - pip install --user cpp-coveralls
