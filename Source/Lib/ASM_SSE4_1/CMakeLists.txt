@@ -31,11 +31,20 @@ if(CMAKE_C_COMPILER_ID STREQUAL "Intel")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")
 endif()
 
-# Utility Source Files
-add_library(HEVC_ASM_SSE4_1 OBJECT
+set(ASM_SSE4_1_SOURCE
     EbIntraPrediction_SSE4_1.h
     EbPictureOperators_SSE4_1.h
     EbTransforms_SSE4_1.h
     EbIntraPrediction16bit_Intrinsic_SSE4_1.c
     EbPictureOperators_Intrinsic_SSE4_1.c
     EbTransforms_Intrinsic_SSE4_1.c)
+
+if(COMPILE_AS_CPP)
+    set_source_files_properties(
+		${ASM_SSE4_1_SOURCE}
+		PROPERTIES LANGUAGE CXX )
+endif()
+
+# Utility Source Files
+add_library(HEVC_ASM_SSE4_1 OBJECT
+    ${ASM_SSE4_1_SOURCE})

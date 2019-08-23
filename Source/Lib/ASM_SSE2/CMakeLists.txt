@@ -29,8 +29,7 @@ if(CMAKE_C_COMPILER_ID STREQUAL "Intel")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -w")
 endif()
 
-# Utility Source Files
-add_library(HEVC_ASM_SSE2 OBJECT
+set(ASM_SSE2_SOURCE
     EbAvcStyleMcp_SSE2.h
     EbComputeMean_SSE2.h
     EbComputeSAD_SSE2.h
@@ -65,3 +64,13 @@ add_library(HEVC_ASM_SSE2 OBJECT
     x64inc.asm
     x64Macro.asm
     x64RegisterUtil.asm)
+
+if(COMPILE_AS_CPP)
+    set_source_files_properties(
+		${ASM_SSE2_SOURCE}
+		PROPERTIES LANGUAGE CXX )
+endif()
+
+# Utility Source Files
+add_library(HEVC_ASM_SSE2 OBJECT
+    ${ASM_SSE2_SOURCE})
