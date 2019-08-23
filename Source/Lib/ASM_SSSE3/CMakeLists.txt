@@ -61,8 +61,8 @@ set(ASM_SSSE3_SOURCE
 
 if(COMPILE_AS_CPP)
     set_source_files_properties(
-		${ASM_SSSE3_SOURCE}
-		PROPERTIES LANGUAGE CXX )
+        ${ASM_SSSE3_SOURCE}
+        PROPERTIES LANGUAGE CXX )
 endif()
 
 # Utility Source Files

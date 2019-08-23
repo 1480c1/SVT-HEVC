@@ -91,8 +91,8 @@ set(ASM_AVX2_SOURCE
 
 if(COMPILE_AS_CPP)
     set_source_files_properties(
-		${ASM_AVX2_SOURCE}
-		PROPERTIES LANGUAGE CXX )
+        ${ASM_AVX2_SOURCE}
+        PROPERTIES LANGUAGE CXX )
 endif()
 
 add_library(HEVC_ASM_AVX2 OBJECT

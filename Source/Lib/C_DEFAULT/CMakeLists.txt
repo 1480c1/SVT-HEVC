@@ -37,8 +37,8 @@ set(C_DEFAULT_SOURCE
 
 if(COMPILE_AS_CPP)
     set_source_files_properties(
-		${C_DEFAULT_SOURCE}
-		PROPERTIES LANGUAGE CXX )
+        ${C_DEFAULT_SOURCE}
+        PROPERTIES LANGUAGE CXX )
 endif()
 
 add_library(HEVC_C_DEFAULT OBJECT

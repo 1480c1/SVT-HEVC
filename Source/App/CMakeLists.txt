@@ -25,8 +25,8 @@ set(SvtHevcEncApp_Source
 
 if(COMPILE_AS_CPP)
     set_source_files_properties(
-		${SvtHevcEncApp_Source}
-		PROPERTIES LANGUAGE CXX )
+        ${SvtHevcEncApp_Source}
+        PROPERTIES LANGUAGE CXX )
 endif()
 
 add_executable(SvtHevcEncApp
@@ -39,7 +39,7 @@ target_link_libraries(SvtHevcEncApp
     SvtHevcEnc)
 
 if(UNIX)
-	target_link_libraries(SvtHevcEncApp
+    target_link_libraries(SvtHevcEncApp
         pthread)
     if(NOT APPLE)
         target_link_libraries(SvtHevcEncApp

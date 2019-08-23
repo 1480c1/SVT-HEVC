@@ -53,8 +53,8 @@ set(ASM_SSE4_1_SOURCE
 
 if(COMPILE_AS_CPP)
     set_source_files_properties(
-		${ASM_SSE4_1_SOURCE}
-		PROPERTIES LANGUAGE CXX )
+        ${ASM_SSE4_1_SOURCE}
+        PROPERTIES LANGUAGE CXX )
 endif()
 
 # Utility Source Files

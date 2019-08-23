@@ -183,8 +183,8 @@ set(Codec_Source
 
 if(COMPILE_AS_CPP)
     set_source_files_properties(
-		${Codec_Source}
-		PROPERTIES LANGUAGE CXX )
+        ${Codec_Source}
+        PROPERTIES LANGUAGE CXX )
 endif()
 
 add_library(SvtHevcEnc
