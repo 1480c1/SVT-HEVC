@@ -19,7 +19,7 @@ link_directories(${PROJECT_SOURCE_DIR}/Source/Lib/ASM_SSE2/
     ${PROJECT_SOURCE_DIR}/Source/Lib/ASM_AVX2/)
 
 # Encoder Lib Source Files
-add_library(SvtHevcEnc
+set(Codec_Source
     EbAdaptiveMotionVectorPrediction.h
     EbAvailability.h
     EbAvcStyleMcp.h
@@ -180,6 +180,15 @@ add_library(SvtHevcEnc
     $<TARGET_OBJECTS:HEVC_ASM_SSSE3>
     $<TARGET_OBJECTS:HEVC_ASM_SSE4_1>
     $<TARGET_OBJECTS:HEVC_ASM_AVX2>)
+
+if(COMPILE_AS_CPP)
+    set_source_files_properties(
+		${Codec_Source}
+		PROPERTIES LANGUAGE CXX )
+endif()
+
+add_library(SvtHevcEnc
+    ${Codec_Source})
 
 if(UNIX)
     set(LIBS "-lpthread")
