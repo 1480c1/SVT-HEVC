@@ -17,10 +17,6 @@ set(SvtHevcEncApp_Source
     EbAppMain.c
     EbAppProcessCmd.c
     EbTime.c
-    ../API/EbApi.h
-    EbAppConfig.h
-    EbAppContext.h
-    ../API/EbErrorCodes.h
     EbAppInputy4m.c)
 
 if(COMPILE_AS_CPP)
@@ -30,7 +26,11 @@ if(COMPILE_AS_CPP)
 endif()
 
 add_executable(SvtHevcEncApp
-    ${SvtHevcEncApp_Source})
+    ${SvtHevcEncApp_Source}
+    ../API/EbApi.h
+    EbAppConfig.h
+    EbAppContext.h
+    ../API/EbErrorCodes.h)
 
 #********** SET COMPILE FLAGS************
 

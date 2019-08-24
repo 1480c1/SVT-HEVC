@@ -44,6 +44,32 @@ if(CMAKE_C_COMPILER_ID STREQUAL "Intel")
 endif()
 
 set(ASM_SSE2_SOURCE
+    EbApplySaoLcu16bit_Intrinsic_SSE2.c
+    EbAvcStyleMcp_Intrinsic_SSE2.c
+    EbCombinedAveragingSAD_Intrinsic_SSE2.c
+    EbComputeMean_Intrinsic_SSE2.c
+    EbDeblockingFilter_Intrinsic_SSE2.c
+    EbGatherSaoStatistics16bit_Intrinsic_SSE2.c
+    EbIntraPrediction16bit_Intrinsic_SSE2.c
+    EbIntraPrediction_Intrinsic_SSE2.c
+    EbInvTransform_Intrinsic_SSE2.c
+    EbMcp16bit_Intrinsic_SSE2.c
+    EbMcp_Intrinsic_SSE2.c
+    EbMeSadCalculation_Intrinsic_SSE2.c
+    EbPackUnPack_Intrinsic_SSE2.c
+    EbPictureOperators_Intrinsic_SSE2.c
+    EbSaoStatistics_Intrinsic_SSE2.c
+    EbTransforms_Intrinsic_SSE2.c)
+
+if(COMPILE_AS_CPP)
+    set_source_files_properties(
+        ${ASM_SSE2_SOURCE}
+        PROPERTIES LANGUAGE CXX )
+endif()
+
+# Utility Source Files
+add_library(HEVC_ASM_SSE2 OBJECT
+    ${ASM_SSE2_SOURCE}
     EbAvcStyleMcp_SSE2.h
     EbComputeMean_SSE2.h
     EbComputeSAD_SSE2.h
@@ -57,34 +83,8 @@ set(ASM_SSE2_SOURCE
     EbPictureOperators_SSE2.h
     EbSampleAdaptiveOffset_SSE2.h
     EbTransforms_SSE2.h
-    EbApplySaoLcu16bit_Intrinsic_SSE2.c
-    EbAvcStyleMcp_Intrinsic_SSE2.c
-    EbCombinedAveragingSAD_Intrinsic_SSE2.c
-    EbComputeMean_Intrinsic_SSE2.c
-    EbDeblockingFilter_Intrinsic_SSE2.c
-    EbGatherSaoStatistics16bit_Intrinsic_SSE2.c
     EbGatherSaoStatistics16bit_SSE2.asm
-    EbIntraPrediction16bit_Intrinsic_SSE2.c
-    EbIntraPrediction_Intrinsic_SSE2.c
-    EbInvTransform_Intrinsic_SSE2.c
-    EbMcp16bit_Intrinsic_SSE2.c
-    EbMcp_Intrinsic_SSE2.c
-    EbMeSadCalculation_Intrinsic_SSE2.c
-    EbPackUnPack_Intrinsic_SSE2.c
-    EbPictureOperators_Intrinsic_SSE2.c
     EbPictureOperators_SSE2.asm
-    EbSaoStatistics_Intrinsic_SSE2.c
-    EbTransforms_Intrinsic_SSE2.c
     x64inc.asm
     x64Macro.asm
     x64RegisterUtil.asm)
-
-if(COMPILE_AS_CPP)
-    set_source_files_properties(
-        ${ASM_SSE2_SOURCE}
-        PROPERTIES LANGUAGE CXX )
-endif()
-
-# Utility Source Files
-add_library(HEVC_ASM_SSE2 OBJECT
-    ${ASM_SSE2_SOURCE})

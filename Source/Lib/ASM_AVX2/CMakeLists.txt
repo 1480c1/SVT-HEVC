@@ -70,16 +70,6 @@ if(CMAKE_C_COMPILER_VERSION VERSION_EQUAL 5.4)
 endif()
 
 set(ASM_AVX2_SOURCE
-    EbCombinedAveragingSAD_Intrinsic_AVX2.h
-    EbCombinedAveragingSAD_Intrinsic_AVX512.h
-    EbComputeSAD_AVX2.h
-    EbComputeSAD_SadLoopKernel_AVX512.h
-    EbIntraPrediction_AVX2.h
-    EbMcp_AVX2.h
-    EbNoiseExtractAVX2.h
-    EbPackUnPack_Intrinsic_AVX2.h
-    EbPictureOperators_AVX2.h
-    EbTransforms_AVX2.h
     EbCombinedAveragingSAD_Intrinsic_AVX2.c
     EbCombinedAveragingSAD_Intrinsic_AVX512.c
     EbComputeSAD_Intrinsic_AVX2.c
@@ -98,4 +88,14 @@ if(COMPILE_AS_CPP)
 endif()
 
 add_library(HEVC_ASM_AVX2 OBJECT
-    ${ASM_AVX2_SOURCE})
+    ${ASM_AVX2_SOURCE}
+    EbCombinedAveragingSAD_Intrinsic_AVX2.h
+    EbCombinedAveragingSAD_Intrinsic_AVX512.h
+    EbComputeSAD_AVX2.h
+    EbComputeSAD_SadLoopKernel_AVX512.h
+    EbIntraPrediction_AVX2.h
+    EbMcp_AVX2.h
+    EbNoiseExtractAVX2.h
+    EbPackUnPack_Intrinsic_AVX2.h
+    EbPictureOperators_AVX2.h
+    EbTransforms_AVX2.h)

@@ -47,12 +47,6 @@ if(CMAKE_C_COMPILER_ID STREQUAL "Intel")
 endif()
 
 set(ASM_SSSE3_SOURCE
-    EbAvcStyleMcp_SSSE3.h
-    EbDeblockingFilter_SSSE3.h
-    EbIntraPrediction_SSSE3.h
-    EbMcp_SSSE3.h
-    EbSaoApplication_SSSE3.h
-    EbTransforms_SSSE3.h
     EbAvcStyleMcp_Intrinsic_SSSE3.c
     EbDeblockingFilter16bit_Intrinsic_SSSE3.c
     EbDeblockingFilter_Intrinsic_SSSE3.c
@@ -69,4 +63,10 @@ endif()
 
 # Utility Source Files
 add_library(HEVC_ASM_SSSE3 OBJECT
-    ${ASM_SSSE3_SOURCE})
+    ${ASM_SSSE3_SOURCE}
+    EbAvcStyleMcp_SSSE3.h
+    EbDeblockingFilter_SSSE3.h
+    EbIntraPrediction_SSSE3.h
+    EbMcp_SSSE3.h
+    EbSaoApplication_SSSE3.h
+    EbTransforms_SSSE3.h)
