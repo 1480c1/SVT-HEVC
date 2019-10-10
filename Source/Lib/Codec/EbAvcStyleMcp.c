@@ -10,17 +10,17 @@ static const   EB_U8  FracMappedPosTabX[16] = { 0, 1, 2, 3,
 	0, 1, 2, 3,
 	0, 0, 2, 0,
 	0, 1, 2, 3 };
-	
+
 static const   EB_U8  FracMappedPosTabY[16] = { 0, 0, 0, 0,
 	1, 0, 0, 0,
 	2, 2, 2, 2,
 	3, 0, 0, 0 };
-	
+
 static const   EB_U8  IntegerPosoffsetTabX[16] = { 0, 0, 0, 0,
 	0, 0, 0, 0,
 	0, 0, 0, 1,
 	0, 0, 0, 0 };
-	
+
 static const   EB_U8  IntegerPosoffsetTabY[16] = { 0, 0, 0, 0,
 	0, 0, 0, 0,
 	0, 0, 0, 0,
@@ -29,14 +29,14 @@ static const   EB_U8  IntegerPosoffsetTabY[16] = { 0, 0, 0, 0,
 
 
 
-void UnpackUniPredRef10Bit( 
-    EbPictureBufferDesc_t *refFramePicList0, 
+void UnpackUniPredRef10Bit(
+    EbPictureBufferDesc_t *refFramePicList0,
     EB_U32                 posX,
     EB_U32                 posY,
     EB_U32                 puWidth,
     EB_U32                 puHeight,
     EbPictureBufferDesc_t *dst,
-    EB_U32                 dstLumaIndex, 
+    EB_U32                 dstLumaIndex,
     EB_U32                 dstChromaIndex,          //input parameter, please refer to the detailed explanation above.
     EB_U32                 componentMask,
     EB_BYTE                tempBuf)
@@ -45,7 +45,7 @@ void UnpackUniPredRef10Bit(
     EB_U32   chromaPuHeight     = puHeight >> 1;
 
     //doing the luma interpolation
-    if (componentMask & PICTURE_BUFFER_DESC_LUMA_MASK) 
+    if (componentMask & PICTURE_BUFFER_DESC_LUMA_MASK)
     {
         (void) tempBuf;
         EB_U32 inPosx = (posX >> 2);
@@ -72,7 +72,7 @@ void UnpackUniPredRef10Bit(
         EB_U32 inPosx = (posX >> 3);
         EB_U32 inPosy = (posY >> 3);
         EB_U16 *ptr16    =  (EB_U16 *)refFramePicList0->bufferCb  + inPosx + inPosy*refFramePicList0->strideCb;
-  
+
           extract8Bitdata(
             ptr16,
             refFramePicList0->strideCb,
@@ -83,7 +83,7 @@ void UnpackUniPredRef10Bit(
             );
 
         ptr16    =  (EB_U16 *)refFramePicList0->bufferCr  + inPosx + inPosy*refFramePicList0->strideCr;
-           
+
         extract8Bitdata(
             ptr16,
             refFramePicList0->strideCr,
@@ -99,7 +99,7 @@ void UnpackUniPredRef10Bit(
 
 }
 
-void UnpackBiPredRef10Bit( 
+void UnpackBiPredRef10Bit(
     EbPictureBufferDesc_t *refFramePicList0,
     EbPictureBufferDesc_t *refFramePicList1,
     EB_U32                 refList0PosX,
@@ -109,7 +109,7 @@ void UnpackBiPredRef10Bit(
     EB_U32                 puWidth,
     EB_U32                 puHeight,
     EbPictureBufferDesc_t *biDst,
-    EB_U32                 dstLumaIndex, 
+    EB_U32                 dstLumaIndex,
 	EB_U32                 dstChromaIndex,
 	EB_U32                 componentMask,
     EB_BYTE                refList0TempDst,
@@ -127,12 +127,12 @@ void UnpackBiPredRef10Bit(
         (void) refList1TempDst;
        UnpackL0L1AvgSafeSub(
             (EB_U16 *)refFramePicList0->bufferY  + (refList0PosX >> 2) + (refList0PosY >> 2)*refFramePicList0->strideY,
-            refFramePicList0->strideY,                                                                              
+            refFramePicList0->strideY,
             (EB_U16 *)refFramePicList1->bufferY  + (refList1PosX >> 2) + (refList1PosY >> 2)*refFramePicList1->strideY,
-            refFramePicList1->strideY,                                                                              
-            biDst->bufferY + dstLumaIndex,                                                                             
-            biDst->strideY,                                                                                            
-            puWidth,                                                                                                   
+            refFramePicList1->strideY,
+            biDst->bufferY + dstLumaIndex,
+            biDst->strideY,
+            puWidth,
             puHeight
             );
 
@@ -145,11 +145,11 @@ void UnpackBiPredRef10Bit(
 
          UnpackL0L1Avg(
             (EB_U16 *)refFramePicList0->bufferCb  + (refList0PosX >> 3) + (refList0PosY >> 3)*refFramePicList0->strideCb,
-            refFramePicList0->strideCb,                                                                               
+            refFramePicList0->strideCb,
             (EB_U16 *)refFramePicList1->bufferCb  + (refList1PosX >> 3) + (refList1PosY >> 3)*refFramePicList1->strideCb,
-            refFramePicList1->strideCb,                                                                                                                                                       
+            refFramePicList1->strideCb,
             biDst->bufferCb + dstChromaIndex,
-			biDst->strideCb ,                                                                                          
+			biDst->strideCb ,
             chromaPuWidth,
             chromaPuHeight
             );
@@ -157,11 +157,11 @@ void UnpackBiPredRef10Bit(
 
         UnpackL0L1Avg(
             (EB_U16 *)refFramePicList0->bufferCr  + (refList0PosX >> 3) + (refList0PosY >> 3)*refFramePicList0->strideCr,
-            refFramePicList0->strideCr,                                                                               
+            refFramePicList0->strideCr,
             (EB_U16 *)refFramePicList1->bufferCr  + (refList1PosX >> 3) + (refList1PosY >> 3)*refFramePicList1->strideCr,
-            refFramePicList1->strideCr,                                                                                                                                                       
+            refFramePicList1->strideCr,
             biDst->bufferCr + dstChromaIndex,
-			biDst->strideCr,                                                                                          
+			biDst->strideCr,
             chromaPuWidth,
             chromaPuHeight
             );
@@ -176,7 +176,7 @@ void UniPredIFreeRef8Bit(
     EB_U32                 puWidth,
     EB_U32                 puHeight,
     EbPictureBufferDesc_t *dst,
-    EB_U32                 dstLumaIndex, 
+    EB_U32                 dstLumaIndex,
     EB_U32                 dstChromaIndex,          //input parameter, please refer to the detailed explanation above.
     EB_U32                 componentMask,
     EB_BYTE                tempBuf)
@@ -197,10 +197,10 @@ void UniPredIFreeRef8Bit(
     //compute the luma fractional position
     integPosx = (posX >> 2);
     integPosy = (posY >> 2);
-     
+
     fracPosx  = posX & 0x03;
     fracPosy  = posY & 0x03;
-  
+
     //New Interpolation Mapping
     mappedFracPosx = fracPosx;
     mappedFracPosy = fracPosy;
@@ -210,10 +210,10 @@ void UniPredIFreeRef8Bit(
 	mappedFracPosy = FracMappedPosTabY[fracPos];
 	integPosx += IntegerPosoffsetTabX[fracPos];
 	integPosy += IntegerPosoffsetTabY[fracPos];
-   if (componentMask & PICTURE_BUFFER_DESC_LUMA_MASK) 
+   if (componentMask & PICTURE_BUFFER_DESC_LUMA_MASK)
    {
 	   //doing the luma interpolation
-       AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][0](
+       AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & AVX2_MASK)][0](
 		   refPic->bufferY + integPosx + integPosy*refPic->strideY, refPic->strideY,
 		   dst->bufferY + dstLumaIndex, lumaStride,
 		   puWidth, puHeight,
@@ -238,11 +238,11 @@ void UniPredIFreeRef8Bit(
         if (fracPosy > 4){
             integPosy++;
         }
-        
-        // Note: chromaPuWidth equals 4 is only supported in Intrinsic 
+
+        // Note: chromaPuWidth equals 4 is only supported in Intrinsic
 	   //       for integer positions ( mappedFracPosx + (mappedFracPosy << 3) equals 0 )
 	   //doing the chroma Cb interpolation
-       AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][0](
+       AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & AVX2_MASK)][0](
 		   refPic->bufferCb + integPosx + integPosy*refPic->strideCb,
 		   refPic->strideCb,
 		   dst->bufferCb + dstChromaIndex,
@@ -253,7 +253,7 @@ void UniPredIFreeRef8Bit(
 		   mappedFracPosx ? mappedFracPosx : mappedFracPosy);
 
 	   //doing the chroma Cr interpolation
-       AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][0](
+       AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & AVX2_MASK)][0](
 		   refPic->bufferCr + integPosx + integPosy*refPic->strideCr,
 		   refPic->strideCr,
 		   dst->bufferCr + dstChromaIndex,
@@ -281,7 +281,7 @@ void BiPredAverageKernel_C(
 
 	EB_U32 i, j;
 
-	
+
 	for (j = 0; j < areaHeight; j++)
 	{
 		for (i = 0; i < areaWidth; i++)
@@ -289,7 +289,7 @@ void BiPredAverageKernel_C(
 			dst[i + j * dstStride] = (src0[i + j * src0Stride] + src1[i + j * src1Stride] + 1) / 2;
 		}
 	}
-		
+
 
 }
 
@@ -328,7 +328,7 @@ void BiPredIFreeRef8Bit(
     EB_U32                 puWidth,
     EB_U32                 puHeight,
     EbPictureBufferDesc_t *biDst,
-    EB_U32                 dstLumaIndex, 
+    EB_U32                 dstLumaIndex,
 	EB_U32                 dstChromaIndex,
 	EB_U32                 componentMask,
     EB_BYTE                refList0TempDst,
@@ -381,7 +381,7 @@ void BiPredIFreeRef8Bit(
 
 		fracPosL1 = (mappedFracPosx + (mappedFracPosy << 2));
 
-		if ( (fracPosL0 == 0) && (fracPosL1 == 0) )	 
+		if ( (fracPosL0 == 0) && (fracPosL1 == 0) )
 		{
 #ifndef NON_AVX512_SUPPORT
 			BiPredAverageKernel_funcPtrArray[!!(ASM_TYPES & AVX512_MASK) ](
@@ -416,7 +416,7 @@ void BiPredIFreeRef8Bit(
 			integPosx += IntegerPosoffsetTabX[fracPos];
 			integPosy += IntegerPosoffsetTabY[fracPos];
 
-            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][0](
+            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & AVX2_MASK)][0](
 				refPicList0->bufferY + integPosx + integPosy*refLumaStride, refLumaStride,
 				refList0TempDst, puWidth,
 				puWidth, puHeight,
@@ -441,7 +441,7 @@ void BiPredIFreeRef8Bit(
 			integPosy += IntegerPosoffsetTabY[fracPos];
 
 			//doing the luma interpolation
-            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][0](
+            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & AVX2_MASK)][0](
 				refPicList1->bufferY + integPosx + integPosy*refLumaStride, refLumaStride,
 				refList1TempDst, puWidth,
 				puWidth, puHeight,
@@ -450,7 +450,7 @@ void BiPredIFreeRef8Bit(
 
 
 			// bi-pred luma
-			PictureAverageArray[!!(ASM_TYPES & PREAVX2_MASK)](refList0TempDst, puWidth , refList1TempDst, puWidth , biDst->bufferY + dstLumaIndex, lumaStride , puWidth, puHeight );
+			PictureAverageArray[!!(ASM_TYPES & AVX2_MASK)](refList0TempDst, puWidth , refList1TempDst, puWidth , biDst->bufferY + dstLumaIndex, lumaStride , puWidth, puHeight );
 		}
 
 	}
@@ -528,7 +528,7 @@ void BiPredIFreeRef8Bit(
 		{
 
 			// bi-pred chroma  Cb
-			// Note: chromaPuWidth equals 4 is only supported in Intrinsic 
+			// Note: chromaPuWidth equals 4 is only supported in Intrinsic
 			//       for integer positions ( mappedFracPosx + (mappedFracPosy << 3) equals 0 )
 			//doing the chroma Cb interpolation list 0
 			//compute the chroma fractional position
@@ -544,7 +544,7 @@ void BiPredIFreeRef8Bit(
 			if (fracPosy > 4)
 				integPosy++;
 
-            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][0](
+            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & AVX2_MASK)][0](
 				refPicList0->bufferCb + integPosx + integPosy*refPicList0->strideCb,
 				refPicList0->strideCb,
 				refList0TempDst,
@@ -569,7 +569,7 @@ void BiPredIFreeRef8Bit(
 			if (fracPosy > 4)
 				integPosy++;
 
-            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][0](
+            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & AVX2_MASK)][0](
 				refPicList1->bufferCb + integPosx + integPosy*refPicList1->strideCb,
 				refPicList1->strideCb,
 				refList1TempDst,
@@ -580,7 +580,7 @@ void BiPredIFreeRef8Bit(
 				mappedFracPosx ? mappedFracPosx : mappedFracPosy);
 
 			// bi-pred Chroma Cb
-			PictureAverageArray[!!(ASM_TYPES & PREAVX2_MASK)](
+			PictureAverageArray[!!(ASM_TYPES & AVX2_MASK)](
 				refList0TempDst,
 				chromaPuWidth << shift,
 				refList1TempDst,
@@ -593,7 +593,7 @@ void BiPredIFreeRef8Bit(
 
 
 			// bi-pred chroma  Cr
-			// Note: chromaPuWidth equals 4 is only supported in Intrinsic 
+			// Note: chromaPuWidth equals 4 is only supported in Intrinsic
 			//       for integer positions ( mappedFracPosx + (mappedFracPosy << 3) equals 0 )
 			//doing the chroma Cb interpolation list 0
 			//compute the chroma fractional position
@@ -609,7 +609,7 @@ void BiPredIFreeRef8Bit(
 			if (fracPosy > 4)
 				integPosy++;
 
-            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][0](
+            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & AVX2_MASK)][0](
 				refPicList0->bufferCr + integPosx + integPosy*refPicList0->strideCr,
 				refPicList0->strideCr,
 				refList0TempDst,
@@ -634,7 +634,7 @@ void BiPredIFreeRef8Bit(
 			if (fracPosy > 4)
 				integPosy++;
 
-            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][0](
+            AvcStyleUniPredLumaIFFunctionPtrArray[!!(ASM_TYPES & AVX2_MASK)][0](
 				refPicList1->bufferCr + integPosx + integPosy*refPicList1->strideCr,
 				refPicList1->strideCr,
 				refList1TempDst,
@@ -645,13 +645,13 @@ void BiPredIFreeRef8Bit(
 				mappedFracPosx ? mappedFracPosx : mappedFracPosy);
 
 			// bi-pred Chroma Cr
-			PictureAverageArray[!!(ASM_TYPES & PREAVX2_MASK)](
+			PictureAverageArray[!!(ASM_TYPES & AVX2_MASK)](
 				refList0TempDst,
 				chromaPuWidth << shift,
 				refList1TempDst,
-				chromaPuWidth << shift, 
+				chromaPuWidth << shift,
 				biDst->bufferCr + dstChromaIndex,
-				biDst->strideCr << shift, 
+				biDst->strideCr << shift,
 				chromaPuWidth,
 				chromaPuHeight >> shift
 				);

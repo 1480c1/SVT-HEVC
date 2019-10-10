@@ -23,7 +23,7 @@ static EB_S32 MinSaoOffsetvalueBO[2 /*8bit+10bit*/] = { -7 ,-31 };
  ********************************************/
 EB_ERRORTYPE SaoStatsCtor(SaoStats_t **saoStatsPtr)
 {
-    EB_U32 videoComponent; 
+    EB_U32 videoComponent;
 
     SaoStats_t *saoStats;
     EB_MALLOC(SaoStats_t*, saoStats, sizeof(SaoStats_t), EB_N_PTR);
@@ -228,7 +228,7 @@ static void DetermineSaoChromaModeOffsets(
 #else
     // BO Candidates
     for (chromaComponent = SAO_COMPONENT_CHROMA; chromaComponent < SAO_COMPONENT_CHROMA_CR; ++chromaComponent) {
-        boBestCost  = (maxCost >> 1); 
+        boBestCost  = (maxCost >> 1);
         for (boIndex = 0; boIndex < SAO_BO_INTERVALS; ++boIndex) {
             boOffset[chromaComponent - 1][boIndex] = (saoStats->boCount[chromaComponent][boIndex] == 0) ?
                 0 :
@@ -267,7 +267,7 @@ static void DetermineSaoChromaModeOffsets(
         boChromaBestCost += boBestCost;
     }
 #endif
-    // EO Candidates 
+    // EO Candidates
 
     eoChromaBestCost = (maxCost >> 1);
 
@@ -353,21 +353,21 @@ static void DetermineSaoLumaModeOffsets_OnlyEo_90_45_135(
     EB_U64                      lambda,                 // input parameter, lambda, used to compute the cost
     MdRateEstimationContext_t  *mdRateEstimationPtr,    // input parameter, MD table bits, used to compute the cost
     EB_S64                     *saoLumaBestCost,        // output parameter, best SAO Luma cost
-    EB_BOOL                     is10bit      )  
+    EB_BOOL                     is10bit      )
 {
     EB_U32 eoType, eoIndex, bestEotype=0, saoOffset;
     EB_U64 maxCost = (EB_U64) ~0;
 
     EB_S32 eoOffset[SAO_EO_TYPES][SAO_EO_CATEGORIES];
     EB_S64 eoCategoryDistortion[SAO_EO_TYPES][SAO_EO_CATEGORIES];
-    EB_S64 eoTypeDistortion[SAO_EO_TYPES] = {0};  
+    EB_S64 eoTypeDistortion[SAO_EO_TYPES] = {0};
     EB_S64 eoTypeRate[SAO_EO_TYPES] = {0};
     EB_S64 eoTypeCost[SAO_EO_TYPES];
-    EB_S64 eoBestCost = (maxCost >> 1);  
+    EB_S64 eoBestCost = (maxCost >> 1);
 
     EB_U64 saoOffsetFlagBitsNum;
     EB_S64 saoOffRate;
-    EB_S64 saoOffCost; 
+    EB_S64 saoOffCost;
     EB_U32 distortionShift = is10bit ? 4 : 0;
 
     // *Note: in all Cost Computations we are not including the Cost of the Merge Left & Up Costs - they will be added later in TestSaoCopyModes()
@@ -380,7 +380,7 @@ static void DetermineSaoLumaModeOffsets_OnlyEo_90_45_135(
     saoParams->saoOffset[SAO_COMPONENT_LUMA][2]    = 0;
     saoParams->saoOffset[SAO_COMPONENT_LUMA][3]    = 0;
     saoParams->saoBandPosition[SAO_COMPONENT_LUMA] = 0;
-    
+
     // EO Candidates
     for (eoType = 1; eoType < SAO_EO_TYPES; ++eoType ) {
 
@@ -410,14 +410,14 @@ static void DetermineSaoLumaModeOffsets_OnlyEo_90_45_135(
 
             eoBestCost = eoTypeCost[eoType];
             bestEotype = eoType;
-        }  
+        }
     }
 
 
-    eoBestCost += (((mdRateEstimationPtr->saoTypeIndexBits[bestEotype + 1] *lambda) + MD_OFFSET) >> MD_SHIFT); 
+    eoBestCost += (((mdRateEstimationPtr->saoTypeIndexBits[bestEotype + 1] *lambda) + MD_OFFSET) >> MD_SHIFT);
 
     if ( eoBestCost < saoOffCost) {
-        
+
         *saoLumaBestCost =  eoBestCost;
          saoParams->saoTypeIndex[SAO_COMPONENT_LUMA] = bestEotype + 1;
          for (saoOffset = 0; saoOffset < NUMBER_SAO_OFFSETS; ++saoOffset) {
@@ -439,72 +439,72 @@ static void DetermineSaoLumaModeOffsets_OnlyEo_90_45_135(
  ********************************************/
 static void TestSaoCopyModes(
     EB_S32                    **boDiff,              // output parameter, used to store Band Offset diff, boDiff[SAO_BO_INTERVALS]
-    EB_U16                    **boCount,             // output parameter, used to store Band Offset count, boCount[SAO_BO_INTERVALS] 
+    EB_U16                    **boCount,             // output parameter, used to store Band Offset count, boCount[SAO_BO_INTERVALS]
 	EB_S32                      eoDiff[3][SAO_EO_TYPES][SAO_EO_CATEGORIES+1],
     EB_U16                      eoCount[3][SAO_EO_TYPES][SAO_EO_CATEGORIES+1],
     SaoParameters_t            *saoPtr,              // input/output parameter, LCU Ptr, used to store SAO results
-    SaoParameters_t            *leftSaoPtr,          // input parameter, left LCU Ptr, used to detect the availability of the left neighbor candidate 
-    SaoParameters_t            *upSaoPtr,            // input parameter, up LCU Ptr, used to detect the availability of the top neighbor candidate 
+    SaoParameters_t            *leftSaoPtr,          // input parameter, left LCU Ptr, used to detect the availability of the left neighbor candidate
+    SaoParameters_t            *upSaoPtr,            // input parameter, up LCU Ptr, used to detect the availability of the top neighbor candidate
     EB_U64                      lambda,              // input parameter, lambda, used to compute the cost
     MdRateEstimationContext_t  *mdRateEstimationPtr, // input parameter, MD table bits, used to compute the cost
     EB_S64                     *saoLumaBestCost,     // input/output parameter, best SAO Luma cost
     EB_S64                     *saoChromaBestCost,   // input/output parameter, best SAO Chroma cost
     EB_BOOL                     is10bit
-    )   
+    )
 {
     EB_U32 chromaComponent, videoComponent, isChromaComponent, saoOffset;
     EB_U64 maxCost = (EB_U64)~0;
 
-    EB_S64 saoLumaLeftMergeDistortion   = 0;    
-    EB_S64 saoChromaLeftMergeDistortion = 0;  
+    EB_S64 saoLumaLeftMergeDistortion   = 0;
+    EB_S64 saoChromaLeftMergeDistortion = 0;
     EB_U64 saoMergeLeftFlagBitsNum;
     EB_S64 saoMergeLeftRate;
-    EB_S64 saoLumaMergeLeftCost         = 0; 
+    EB_S64 saoLumaMergeLeftCost         = 0;
     EB_S64 saoChromaMergeLeftCost       = 0;
     EB_S64 saoMergeLeftCost             = (maxCost >> 1);
 
-    EB_S64 saoLumaUpMergeDistortion     = 0;   
-    EB_S64 saoChromaUpMergeDistortion   = 0;  
-    EB_U64 saoMergeUpFlagBitsNum; 
+    EB_S64 saoLumaUpMergeDistortion     = 0;
+    EB_S64 saoChromaUpMergeDistortion   = 0;
+    EB_U64 saoMergeUpFlagBitsNum;
     EB_S64 saoMergeUpRate;
-    EB_S64 saoLumaMergeUpCost           = 0; 
-    EB_S64 saoChromaMergeUpCost         = 0;  
+    EB_S64 saoLumaMergeUpCost           = 0;
+    EB_S64 saoChromaMergeUpCost         = 0;
     EB_S64 saoMergeUpCost               = (maxCost >> 1);
 
     EB_S64 saoBestCost;
     EB_U32 distortionShift = is10bit ? 4 : 0;
-    
+
     // Add Left Flag & Up Flag costs to the best Luma & Chroma Costs in order to get the best SAO Cost
-    // The best SAO Cost is either SAO Off Cost or BO Cost or EO Cost 
-    saoMergeLeftFlagBitsNum = (leftSaoPtr) ?  
+    // The best SAO Cost is either SAO Off Cost or BO Cost or EO Cost
+    saoMergeLeftFlagBitsNum = (leftSaoPtr) ?
         mdRateEstimationPtr->saoMergeFlagBits[0] :
         0;
-    
-    saoMergeUpFlagBitsNum  = (upSaoPtr) ? 
-        mdRateEstimationPtr->saoMergeFlagBits[0] :
-        0; 
 
-    saoBestCost        = *saoLumaBestCost + *saoChromaBestCost + ((((saoMergeLeftFlagBitsNum + saoMergeUpFlagBitsNum) * lambda) + MD_OFFSET) >> MD_SHIFT); 
-    *saoLumaBestCost   = *saoLumaBestCost   + ((((saoMergeLeftFlagBitsNum + saoMergeUpFlagBitsNum) * lambda) + MD_OFFSET) >> MD_SHIFT); 
-    *saoChromaBestCost = *saoChromaBestCost + ((((saoMergeLeftFlagBitsNum + saoMergeUpFlagBitsNum) * lambda) + MD_OFFSET) >> MD_SHIFT); 
+    saoMergeUpFlagBitsNum  = (upSaoPtr) ?
+        mdRateEstimationPtr->saoMergeFlagBits[0] :
+        0;
+
+    saoBestCost        = *saoLumaBestCost + *saoChromaBestCost + ((((saoMergeLeftFlagBitsNum + saoMergeUpFlagBitsNum) * lambda) + MD_OFFSET) >> MD_SHIFT);
+    *saoLumaBestCost   = *saoLumaBestCost   + ((((saoMergeLeftFlagBitsNum + saoMergeUpFlagBitsNum) * lambda) + MD_OFFSET) >> MD_SHIFT);
+    *saoChromaBestCost = *saoChromaBestCost + ((((saoMergeLeftFlagBitsNum + saoMergeUpFlagBitsNum) * lambda) + MD_OFFSET) >> MD_SHIFT);
 
     // Left-Neighbor Candidate
-    if(leftSaoPtr) { 
+    if(leftSaoPtr) {
 
-        // Luma            
+        // Luma
         if(leftSaoPtr->saoTypeIndex[SAO_COMPONENT_LUMA] > 0) {
-            
+
             if (leftSaoPtr->saoTypeIndex[SAO_COMPONENT_LUMA] == 5) { // BO
-                
+
                 for (saoOffset = 0; saoOffset < NUMBER_SAO_OFFSETS; ++saoOffset) {
-                    
+
                     saoLumaLeftMergeDistortion += - (2 * leftSaoPtr->saoOffset[SAO_COMPONENT_LUMA][saoOffset] * boDiff[SAO_COMPONENT_LUMA][leftSaoPtr->saoBandPosition[SAO_COMPONENT_LUMA] + saoOffset]) + ((EB_S32)boCount[SAO_COMPONENT_LUMA][leftSaoPtr->saoBandPosition[SAO_COMPONENT_LUMA] + saoOffset] * SQR(leftSaoPtr->saoOffset[SAO_COMPONENT_LUMA][saoOffset]));
                 }
-            } 
+            }
             else { // EO
-                
+
                 for (saoOffset = 0; saoOffset < NUMBER_SAO_OFFSETS; ++saoOffset) {
-                    
+
                     saoLumaLeftMergeDistortion += - (2 * leftSaoPtr->saoOffset[SAO_COMPONENT_LUMA][saoOffset] * eoDiff[SAO_COMPONENT_LUMA][leftSaoPtr->saoTypeIndex[SAO_COMPONENT_LUMA] - 1][saoOffset]) + ((EB_S32)eoCount[SAO_COMPONENT_LUMA][leftSaoPtr->saoTypeIndex[SAO_COMPONENT_LUMA] - 1][saoOffset] * SQR(leftSaoPtr->saoOffset[SAO_COMPONENT_LUMA][saoOffset]));
                 }
             }
@@ -512,29 +512,29 @@ static void TestSaoCopyModes(
 
         // Chroma
         if(leftSaoPtr->saoTypeIndex[SAO_COMPONENT_CHROMA] > 0) {
-                
+
             if (leftSaoPtr->saoTypeIndex[SAO_COMPONENT_CHROMA] == 5) { // BO
-                
+
                 for (chromaComponent = SAO_COMPONENT_CHROMA; chromaComponent < SAO_COMPONENT_CHROMA_CR; ++chromaComponent) {
-                    
+
                     for (saoOffset = 0; saoOffset < NUMBER_SAO_OFFSETS; ++saoOffset) {
-                        
+
                         saoChromaLeftMergeDistortion += - (2 * leftSaoPtr->saoOffset[chromaComponent][saoOffset] * boDiff[chromaComponent][leftSaoPtr->saoBandPosition[chromaComponent] + saoOffset]) + ((EB_S32)boCount[chromaComponent][leftSaoPtr->saoBandPosition[chromaComponent] + saoOffset] * SQR(leftSaoPtr->saoOffset[chromaComponent][saoOffset]));
                     }
-                } 
+                }
             }
             else { // EO
-                
+
                 for (chromaComponent = SAO_COMPONENT_CHROMA; chromaComponent < SAO_COMPONENT_CHROMA_CR; ++chromaComponent) {
-                    
+
                     for (saoOffset = 0; saoOffset < NUMBER_SAO_OFFSETS; ++saoOffset) {
-                        
+
                         saoChromaLeftMergeDistortion += - (2 * leftSaoPtr->saoOffset[chromaComponent][saoOffset] * eoDiff[chromaComponent][leftSaoPtr->saoTypeIndex[SAO_COMPONENT_CHROMA] - 1][saoOffset]) + ((EB_S32)eoCount[chromaComponent][leftSaoPtr->saoTypeIndex[SAO_COMPONENT_CHROMA] - 1][saoOffset] * SQR(leftSaoPtr->saoOffset[chromaComponent][saoOffset]));
                     }
                 }
             }
         }
-        
+
         saoMergeLeftRate       =  mdRateEstimationPtr->saoMergeFlagBits[1];
 
         //CHKN
@@ -550,19 +550,19 @@ static void TestSaoCopyModes(
     // Top-Neighbor Candidate
     if(upSaoPtr) {
 
-        // Luma            
+        // Luma
         if(upSaoPtr->saoTypeIndex[SAO_COMPONENT_LUMA] > 0) {
-            
+
             if (upSaoPtr->saoTypeIndex[SAO_COMPONENT_LUMA] == 5) { // BO
 
                 for (saoOffset = 0; saoOffset < NUMBER_SAO_OFFSETS; ++saoOffset) {
-                    
+
                     saoLumaUpMergeDistortion += - (2 * upSaoPtr->saoOffset[SAO_COMPONENT_LUMA][saoOffset] * boDiff[SAO_COMPONENT_LUMA][upSaoPtr->saoBandPosition[SAO_COMPONENT_LUMA] + saoOffset]) + ((EB_S32)boCount[SAO_COMPONENT_LUMA][upSaoPtr->saoBandPosition[SAO_COMPONENT_LUMA] + saoOffset] * SQR(upSaoPtr->saoOffset[SAO_COMPONENT_LUMA][saoOffset]));
                 }
             } else { // EO
 
                 for (saoOffset = 0; saoOffset < NUMBER_SAO_OFFSETS; ++saoOffset) {
-                    
+
                     saoLumaUpMergeDistortion += - (2 * upSaoPtr->saoOffset[SAO_COMPONENT_LUMA][saoOffset] * eoDiff[SAO_COMPONENT_LUMA][upSaoPtr->saoTypeIndex[SAO_COMPONENT_LUMA] - 1][saoOffset]) + ((EB_S32)eoCount[SAO_COMPONENT_LUMA][upSaoPtr->saoTypeIndex[SAO_COMPONENT_LUMA] - 1][saoOffset] * SQR(upSaoPtr->saoOffset[SAO_COMPONENT_LUMA][saoOffset]));
                 }
             }
@@ -570,23 +570,23 @@ static void TestSaoCopyModes(
 
         // Chroma
         if(upSaoPtr->saoTypeIndex[SAO_COMPONENT_CHROMA] > 0) {
-                
+
             if (upSaoPtr->saoTypeIndex[SAO_COMPONENT_CHROMA] == 5) { // BO
-                
+
                 for (chromaComponent = SAO_COMPONENT_CHROMA; chromaComponent < SAO_COMPONENT_CHROMA_CR; ++chromaComponent) {
-                    
+
                     for (saoOffset = 0; saoOffset < NUMBER_SAO_OFFSETS; ++saoOffset) {
-                        
+
                         saoChromaUpMergeDistortion += - (2 * upSaoPtr->saoOffset[chromaComponent][saoOffset] * boDiff[chromaComponent][upSaoPtr->saoBandPosition[chromaComponent] + saoOffset]) + ((EB_S32)boCount[chromaComponent][upSaoPtr->saoBandPosition[chromaComponent] + saoOffset] * SQR(upSaoPtr->saoOffset[chromaComponent][saoOffset]));
                     }
-                } 
+                }
             }
             else { // EO
-                
+
                 for (chromaComponent = SAO_COMPONENT_CHROMA; chromaComponent < SAO_COMPONENT_CHROMA_CR; ++chromaComponent) {
-                    
+
                     for (saoOffset = 0; saoOffset < NUMBER_SAO_OFFSETS; ++saoOffset) {
-                        
+
                         saoChromaUpMergeDistortion += - (2 * upSaoPtr->saoOffset[chromaComponent][saoOffset] * eoDiff[chromaComponent][upSaoPtr->saoTypeIndex[SAO_COMPONENT_CHROMA] - 1][saoOffset]) + ((EB_S32)eoCount[chromaComponent][upSaoPtr->saoTypeIndex[SAO_COMPONENT_CHROMA] - 1][saoOffset] * SQR(upSaoPtr->saoOffset[chromaComponent][saoOffset]));
                     }
                 }
@@ -596,13 +596,13 @@ static void TestSaoCopyModes(
          //CHKN
         saoLumaUpMergeDistortion   = saoLumaUpMergeDistortion   >> distortionShift;
         saoChromaUpMergeDistortion = saoChromaUpMergeDistortion >> distortionShift;
-        
+
         saoMergeUpFlagBitsNum = mdRateEstimationPtr->saoMergeFlagBits[1];
         saoMergeUpRate        = saoMergeLeftFlagBitsNum + saoMergeUpFlagBitsNum;
         saoLumaMergeUpCost    = (saoLumaUpMergeDistortion << COST_PRECISION)   + (((saoMergeUpRate *lambda) + MD_OFFSET) >> MD_SHIFT);
         saoChromaMergeUpCost  = (saoChromaUpMergeDistortion << COST_PRECISION) + (((saoMergeUpRate *lambda) + MD_OFFSET) >> MD_SHIFT);
         saoMergeUpCost        = (saoLumaUpMergeDistortion << COST_PRECISION)   + (saoChromaUpMergeDistortion << COST_PRECISION) + (((saoMergeUpRate *lambda) + MD_OFFSET) >> MD_SHIFT);
-        
+
     }
 
     if ((saoMergeLeftCost < saoBestCost) || (saoMergeUpCost < saoBestCost) ) {
@@ -610,32 +610,32 @@ static void TestSaoCopyModes(
         saoBestCost = MIN(saoMergeLeftCost, saoMergeUpCost);
 
         if (saoBestCost == saoMergeLeftCost && leftSaoPtr) {
-			
+
             saoPtr->saoMergeLeftFlag = EB_TRUE;
-            
+
             for (videoComponent = SAO_COMPONENT_LUMA; videoComponent < SAO_COMPONENT_CHROMA_CR; ++videoComponent) {
-                
+
                 isChromaComponent = (videoComponent == SAO_COMPONENT_LUMA) ? SAO_COMPONENT_LUMA : SAO_COMPONENT_CHROMA;
                 saoPtr->saoTypeIndex[isChromaComponent] = leftSaoPtr->saoTypeIndex[isChromaComponent];
                 saoPtr->saoBandPosition[videoComponent] = leftSaoPtr->saoBandPosition[videoComponent];
-                EB_MEMCPY(saoPtr->saoOffset[videoComponent], leftSaoPtr->saoOffset[videoComponent], NUMBER_SAO_OFFSETS * sizeof(EB_S32)); 
+                EB_MEMCPY(saoPtr->saoOffset[videoComponent], leftSaoPtr->saoOffset[videoComponent], NUMBER_SAO_OFFSETS * sizeof(EB_S32));
                 *saoLumaBestCost   = saoLumaMergeLeftCost;
-                *saoChromaBestCost = saoChromaMergeLeftCost; 
+                *saoChromaBestCost = saoChromaMergeLeftCost;
             }
 
         }
         else if (saoBestCost == saoMergeUpCost && upSaoPtr) {
-			
+
             saoPtr->saoMergeUpFlag = EB_TRUE;
 
             for (videoComponent = SAO_COMPONENT_LUMA; videoComponent < SAO_COMPONENT_CHROMA_CR; ++videoComponent) {
-                
+
                 isChromaComponent = (videoComponent == SAO_COMPONENT_LUMA) ? SAO_COMPONENT_LUMA : SAO_COMPONENT_CHROMA;
                 saoPtr->saoTypeIndex[isChromaComponent] = upSaoPtr->saoTypeIndex[isChromaComponent];
                 saoPtr->saoBandPosition[videoComponent] = upSaoPtr->saoBandPosition[videoComponent];
                 EB_MEMCPY(saoPtr->saoOffset[videoComponent], upSaoPtr->saoOffset[videoComponent], NUMBER_SAO_OFFSETS * sizeof(EB_S32));
                 *saoLumaBestCost   = saoLumaMergeUpCost;
-                *saoChromaBestCost = saoChromaMergeUpCost; 
+                *saoChromaBestCost = saoChromaMergeUpCost;
             }
         }
     }
@@ -648,7 +648,7 @@ static void TestSaoCopyModes(
  *   generates SAO offsets and chooses best SAO mode
  ********************************************/
 EB_ERRORTYPE SaoGenerationDecision(
-    SaoStats_t                 *saoStats,     
+    SaoStats_t                 *saoStats,
     SaoParameters_t            *saoParams,
     MdRateEstimationContext_t  *mdRateEstimationPtr,
     EB_U64                      fullLambda,
@@ -682,7 +682,7 @@ EB_ERRORTYPE SaoGenerationDecision(
     const EB_U16 subWidthCMinus1 = (colorFormat == EB_YUV444 ? 1 : 2) - 1;
     const EB_U16 subHeightCMinus1 = (colorFormat >= EB_YUV422 ? 1 : 2) - 1;
 
-    // Intialise SAO  Parameters         
+    // Intialise SAO  Parameters
     saoParams->saoTypeIndex[SAO_COMPONENT_LUMA]     = 0;
     saoParams->saoTypeIndex[SAO_COMPONENT_CHROMA]   = 0;
     saoParams->saoOffset[SAO_COMPONENT_LUMA][0]     = 0;
@@ -698,7 +698,7 @@ EB_ERRORTYPE SaoGenerationDecision(
 
     if (mmSao) {
         // Y
-        SaoGatherFunctionTableLossy[!!(ASM_TYPES & PREAVX2_MASK)](
+        SaoGatherFunctionTableLossy[!!(ASM_TYPES & AVX2_MASK)](
             &(inputPicturePtr->bufferY[(inputPicturePtr->originY + tbOriginY) * inputPicturePtr->strideY + inputPicturePtr->originX + tbOriginX]),
             inputPicturePtr->strideY,
             &(reconPicturePtr->bufferY[(reconPicturePtr->originY + tbOriginY) * reconPicturePtr->strideY + reconPicturePtr->originX + tbOriginX]),
@@ -711,7 +711,7 @@ EB_ERRORTYPE SaoGenerationDecision(
             saoStats->eoCount[0]);
 
         // U
-        SaoGatherFunctionTableLossy[!!(ASM_TYPES & PREAVX2_MASK)](
+        SaoGatherFunctionTableLossy[!!(ASM_TYPES & AVX2_MASK)](
             &(inputPicturePtr->bufferCb[(((inputPicturePtr->originY + tbOriginY) * inputPicturePtr->strideCb) >> subHeightCMinus1) + ((inputPicturePtr->originX + tbOriginX) >> subWidthCMinus1)]),
             inputPicturePtr->strideCb,
             &(reconPicturePtr->bufferCb[(((reconPicturePtr->originY + tbOriginY) * reconPicturePtr->strideCb) >> subHeightCMinus1) + ((reconPicturePtr->originX + tbOriginX) >> subWidthCMinus1)]),
@@ -724,7 +724,7 @@ EB_ERRORTYPE SaoGenerationDecision(
             saoStats->eoCount[1]);
 
         // V
-        SaoGatherFunctionTableLossy[!!(ASM_TYPES & PREAVX2_MASK)](
+        SaoGatherFunctionTableLossy[!!(ASM_TYPES & AVX2_MASK)](
             &(inputPicturePtr->bufferCr[(((inputPicturePtr->originY + tbOriginY) * inputPicturePtr->strideCr) >> subHeightCMinus1) + ((inputPicturePtr->originX + tbOriginX) >> subWidthCMinus1)]),
             inputPicturePtr->strideCr,
             &(reconPicturePtr->bufferCr[(((reconPicturePtr->originY + tbOriginY) * reconPicturePtr->strideCr) >> subHeightCMinus1) + ((reconPicturePtr->originX + tbOriginX) >> subWidthCMinus1)]),
@@ -753,7 +753,7 @@ EB_ERRORTYPE SaoGenerationDecision(
             saoChromaBestCost,
             EB_FALSE);
 
-        // Check Merge Mode Y + U + V    
+        // Check Merge Mode Y + U + V
         TestSaoCopyModes(
             saoStats->boDiff,
             saoStats->boCount,
@@ -773,7 +773,7 @@ EB_ERRORTYPE SaoGenerationDecision(
         if (pictureControlSetPtr->temporalLayerIndex == 0) {
             // Y
             {
-                SaoGatherFunctionTableLossy_90_45_135[!!(ASM_TYPES & PREAVX2_MASK)](
+                SaoGatherFunctionTableLossy_90_45_135[!!(ASM_TYPES & AVX2_MASK)](
                     &(inputPicturePtr->bufferY[(inputPicturePtr->originY + tbOriginY) * inputPicturePtr->strideY + inputPicturePtr->originX + tbOriginX]),
                     inputPicturePtr->strideY,
                     &(reconPicturePtr->bufferY[(reconPicturePtr->originY + tbOriginY) * reconPicturePtr->strideY + reconPicturePtr->originX + tbOriginX]),
@@ -788,7 +788,7 @@ EB_ERRORTYPE SaoGenerationDecision(
 
         if (pictureControlSetPtr->temporalLayerIndex == 1) {
             // Y
-            SaoGatherFunctionTableLossy_90_45_135[!!(ASM_TYPES & PREAVX2_MASK)](
+            SaoGatherFunctionTableLossy_90_45_135[!!(ASM_TYPES & AVX2_MASK)](
                 &(inputPicturePtr->bufferY[(inputPicturePtr->originY + tbOriginY) * inputPicturePtr->strideY + inputPicturePtr->originX + tbOriginX]),
                 inputPicturePtr->strideY,
                 &(reconPicturePtr->bufferY[(reconPicturePtr->originY + tbOriginY) * reconPicturePtr->strideY + reconPicturePtr->originX + tbOriginX]),
@@ -827,7 +827,7 @@ EB_ERRORTYPE SaoGenerationDecision(
         }
 
 
-        //Check Merge Mode (Luma+Chroma)   
+        //Check Merge Mode (Luma+Chroma)
         if (pictureControlSetPtr->temporalLayerIndex < 2) {
 
             TestSaoCopyModes(
@@ -967,8 +967,8 @@ EB_ERRORTYPE SaoGenerationDecision16bit(
     const EB_COLOR_FORMAT colorFormat = recon16->colorFormat;
     const EB_U16 subWidthCMinus1 = (colorFormat == EB_YUV444 ? 1 : 2) - 1;
     const EB_U16 subHeightCMinus1 = (colorFormat >= EB_YUV422 ? 1 : 2) - 1;
-        
-    // Intialise SAO  Parameters         
+
+    // Intialise SAO  Parameters
     saoParams->saoTypeIndex[SAO_COMPONENT_LUMA] = 0;
     saoParams->saoTypeIndex[SAO_COMPONENT_CHROMA] = 0;
     saoParams->saoOffset[SAO_COMPONENT_LUMA][0] = 0;
@@ -1069,7 +1069,7 @@ EB_ERRORTYPE SaoGenerationDecision16bit(
 			//; Requirement: lcuHeight > 2
 
 			{
-                SaoGatherFunctionTable_90_45_135_16bit_SSE2[!!(ASM_TYPES & PREAVX2_MASK)][((lcuWidth & 15) == 0) || (lcuWidth == 28) || (lcuWidth == 56)](
+                SaoGatherFunctionTable_90_45_135_16bit_SSE2[!!(ASM_TYPES & AVX2_MASK)][((lcuWidth & 15) == 0) || (lcuWidth == 28) || (lcuWidth == 56)](
                     (EB_U16*)inputLcuPtr->bufferY,
                     inputLcuPtr->strideY,
                     (EB_U16*)(recon16->bufferY) + (recon16->originY + tbOriginY)*recon16->strideY + (recon16->originX + tbOriginX),
@@ -1082,7 +1082,7 @@ EB_ERRORTYPE SaoGenerationDecision16bit(
 		}
 
 		if (pictureControlSetPtr->temporalLayerIndex == 1) {
-            SaoGatherFunctionTable_90_45_135_16bit_SSE2[!!(ASM_TYPES & PREAVX2_MASK)][((lcuWidth & 15) == 0) || (lcuWidth == 28) || (lcuWidth == 56)](
+            SaoGatherFunctionTable_90_45_135_16bit_SSE2[!!(ASM_TYPES & AVX2_MASK)][((lcuWidth & 15) == 0) || (lcuWidth == 28) || (lcuWidth == 56)](
                 (EB_U16*)inputLcuPtr->bufferY,
                 inputLcuPtr->strideY,
                 (EB_U16*)(recon16->bufferY) + (recon16->originY + tbOriginY)*recon16->strideY + (recon16->originX + tbOriginX),
@@ -1120,7 +1120,7 @@ EB_ERRORTYPE SaoGenerationDecision16bit(
 				EB_TRUE);
 		}
 
-		//Check Merge Mode (Luma+Chroma)   
+		//Check Merge Mode (Luma+Chroma)
 		if (pictureControlSetPtr->temporalLayerIndex < 2) {
 
 			TestSaoCopyModes(

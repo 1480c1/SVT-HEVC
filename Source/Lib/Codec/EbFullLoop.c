@@ -89,7 +89,7 @@ void ProductUnifiedQuantizeInvQuantizeMd(
     EB_RDOQ_PMCORE_TYPE   rdoqPmCoreMethod,
 	CabacEncodeContext_t *cabacEncodeCtxPtr,
 	EB_U64                lambda,
-	EB_MODETYPE           type,                
+	EB_MODETYPE           type,
 	EB_U32                intraLumaMode,
 	EB_U32                intraChromaMode,
 	CabacCost_t          *CabacCost)
@@ -294,7 +294,7 @@ void ProductFullLoop(
 			candidateBuffer->yDc[tuIt] = ABS(((EB_S16*)candidateBuffer->residualQuantCoeffPtr->bufferY)[tuOriginIndex]);
 			candidateBuffer->yCountNonZeroCoeffs[tuIt] = (EB_U16)yCountNonZeroCoeffs[currentTuIndex];
 
-		}  
+		}
 
 	}else{
 
@@ -354,7 +354,7 @@ void ProductFullLoop(
 					cuStatsPtr->size < 32 ? PF_OFF : contextPtr->pfMdMode);
 
                 if ((cuStatsPtr->size >> 3) < 9)
-				    AdditionKernel_funcPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][cuStatsPtr->size >> 3](
+				    AdditionKernel_funcPtrArray[!!(ASM_TYPES & AVX2_MASK)][cuStatsPtr->size >> 3](
 					    &(candidateBuffer->predictionPtr->bufferY[tuOriginIndex]),
 					    64,
 					    &(((EB_S16*)(contextPtr->transQuantBuffersPtr->tuTransCoeff2Nx2NPtr->bufferY))[tuOriginIndex]),
@@ -381,7 +381,7 @@ void ProductFullLoop(
 					PICTURE_BUFFER_DESC_Y_FLAG);
 			}
 
-			tuFullDistortion[0][DIST_CALC_RESIDUAL] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][Log2f(cuStatsPtr->size) - 2](
+			tuFullDistortion[0][DIST_CALC_RESIDUAL] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & AVX2_MASK)][Log2f(cuStatsPtr->size) - 2](
 				&(inputPicturePtr->bufferY[inputOriginIndex]),
 				inputPicturePtr->strideY,
 				&(candidateBuffer->reconPtr->bufferY[tuOriginIndex]),
@@ -389,7 +389,7 @@ void ProductFullLoop(
 				cuStatsPtr->size,
 				cuStatsPtr->size);
 
-			tuFullDistortion[0][DIST_CALC_PREDICTION] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][Log2f(cuStatsPtr->size) - 2](
+			tuFullDistortion[0][DIST_CALC_PREDICTION] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & AVX2_MASK)][Log2f(cuStatsPtr->size) - 2](
 				&(inputPicturePtr->bufferY[inputOriginIndex]),
 				inputPicturePtr->strideY,
 				&(candidateBuffer->predictionPtr->bufferY[tuOriginIndex]),
@@ -411,7 +411,7 @@ void ProductFullLoop(
 
 			const EB_U32 lumaShift = 2 * (7 - Log2f(cuStatsPtr->size));
 			tuFullDistortion[0][DIST_CALC_RESIDUAL] = (tuFullDistortion[0][DIST_CALC_RESIDUAL] + (EB_U64)(1 << (lumaShift - 1))) >> lumaShift;
-			tuFullDistortion[0][DIST_CALC_PREDICTION] = (tuFullDistortion[0][DIST_CALC_PREDICTION] + (EB_U64)(1 << (lumaShift - 1))) >> lumaShift;  
+			tuFullDistortion[0][DIST_CALC_PREDICTION] = (tuFullDistortion[0][DIST_CALC_PREDICTION] + (EB_U64)(1 << (lumaShift - 1))) >> lumaShift;
 		}
 
 		TuEstimateCoeffBitsLuma(
@@ -604,10 +604,10 @@ void FullLoop_R (
     EB_U32                 chromatTuSize;
     EB_U32                 tuOriginX;
     EB_U32                 tuOriginY;
-    
+
     EbPictureBufferDesc_t         * tuTransCoeffTmpPtr;
     EbPictureBufferDesc_t         * tuQuantCoeffTmpPtr;
-    
+
     if (cuStatsPtr->size == MAX_LCU_SIZE) {
         tuCount = 4;
         tuIndex = 1;
@@ -653,7 +653,7 @@ void FullLoop_R (
                  //&(((EB_S16*) candidateBuffer->intraChromaResidualPtr->bufferCb)[tuChromaOriginIndex]):
                 &(((EB_S16*)candidateBuffer->residualQuantCoeffPtr->bufferCb)[tuCbOriginIndex]);
 
-            // Cb Transform 
+            // Cb Transform
             EstimateTransform(
                 chromaResidualPtr,
                 candidateBuffer->residualQuantCoeffPtr->strideCb,
@@ -754,12 +754,12 @@ void FullLoop_R (
 
 
          if (componentMask & PICTURE_BUFFER_DESC_Cr_FLAG) {
-             // Configure the Chroma Residual Ptr 
+             // Configure the Chroma Residual Ptr
              chromaResidualPtr = //(candidateBuffer->candidatePtr->type  == INTRA_MODE )?
                   //&(((EB_S16*) candidateBuffer->intraChromaResidualPtr->bufferCr)[tuChromaOriginIndex]):
                  &(((EB_S16*)candidateBuffer->residualQuantCoeffPtr->bufferCr)[tuCrOriginIndex]);
 
-             // Cr Transform 
+             // Cr Transform
              EstimateTransform(
                  chromaResidualPtr,
                  candidateBuffer->residualQuantCoeffPtr->strideCr,
@@ -857,7 +857,7 @@ void FullLoop_R (
              }
 
          }
-        
+
         ++tuItr;
 		tuIndex = tuIndexList[tuStatPtr->depth][tuItr];
 
@@ -876,8 +876,8 @@ void CuFullDistortionFastTuMode_R (
 	ModeDecisionContext_t            *contextPtr ,
 	ModeDecisionCandidate_t		   *candidatePtr,
 	const CodedUnitStats_t		   *cuStatsPtr,
-	EB_U64                          cbFullDistortion[DIST_CALC_TOTAL] , 
-	EB_U64                          crFullDistortion[DIST_CALC_TOTAL] , 
+	EB_U64                          cbFullDistortion[DIST_CALC_TOTAL] ,
+	EB_U64                          crFullDistortion[DIST_CALC_TOTAL] ,
 	EB_U32                          countNonZeroCoeffs[3][MAX_NUM_OF_TU_PER_CU],
 	EB_U32							componentMask,
     EB_U64                         *cbCoeffBits,
@@ -914,16 +914,16 @@ void CuFullDistortionFastTuMode_R (
         tuTotalCount = 1;
     }
 
-	do { 
+	do {
             tuStatPtr = GetTransformUnitStats(currentTuIndex);
 
             tuOriginX = TU_ORIGIN_ADJUST(cuStatsPtr->originX, cuStatsPtr->size, tuStatPtr->offsetX);
             tuOriginY = TU_ORIGIN_ADJUST(cuStatsPtr->originY, cuStatsPtr->size, tuStatPtr->offsetY);
             tuSize    = cuStatsPtr->size >> tuStatPtr->depth;
             chromaTuSize = tuSize == 4 ? tuSize : (tuSize >> 1);
-            tuOriginIndex = tuOriginX + tuOriginY * candidateBuffer->residualQuantCoeffPtr->strideY ; 
+            tuOriginIndex = tuOriginX + tuOriginY * candidateBuffer->residualQuantCoeffPtr->strideY ;
             tuChromaOriginIndex = tuSize == 4 ?
-                tuOriginIndex : 
+                tuOriginIndex :
                 ((tuOriginX + tuOriginY * candidateBuffer->residualQuantCoeffPtr->strideCb) >> 1);
 
             // Reset the Bit Costs
@@ -939,7 +939,7 @@ void CuFullDistortionFastTuMode_R (
                 countNonZeroCoeffsAll[2] = countNonZeroCoeffs[2][currentTuIndex];
 
             EB_PF_MODE    correctedPFMode = contextPtr->pfMdMode;
-       
+
             if(chromaTuSize == 4)
                 correctedPFMode = PF_OFF;
             else if(chromaTuSize == 8 && contextPtr->pfMdMode == PF_N4)
@@ -947,7 +947,7 @@ void CuFullDistortionFastTuMode_R (
 
             if (contextPtr->spatialSseFullLoop == EB_TRUE) {
 
-                tuFullDistortion[1][DIST_CALC_RESIDUAL] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][Log2f(chromaTuSize) - 2](
+                tuFullDistortion[1][DIST_CALC_RESIDUAL] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & AVX2_MASK)][Log2f(chromaTuSize) - 2](
                     &(inputPicturePtr->bufferCb[inputCbOriginIndex]),
                     inputPicturePtr->strideCb,
                     &(candidateBuffer->reconPtr->bufferCb[tuChromaOriginIndex]),
@@ -956,7 +956,7 @@ void CuFullDistortionFastTuMode_R (
                     chromaTuSize);
 
 
-                tuFullDistortion[1][DIST_CALC_PREDICTION] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][Log2f(chromaTuSize) - 2](
+                tuFullDistortion[1][DIST_CALC_PREDICTION] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & AVX2_MASK)][Log2f(chromaTuSize) - 2](
                     &(inputPicturePtr->bufferCb[inputCbOriginIndex]),
                     inputPicturePtr->strideCb,
                     &(candidateBuffer->predictionPtr->bufferCb[tuChromaOriginIndex]),
@@ -964,7 +964,7 @@ void CuFullDistortionFastTuMode_R (
                     chromaTuSize,
                     chromaTuSize);
 
-                tuFullDistortion[2][DIST_CALC_RESIDUAL] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][Log2f(chromaTuSize) - 2](
+                tuFullDistortion[2][DIST_CALC_RESIDUAL] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & AVX2_MASK)][Log2f(chromaTuSize) - 2](
                     &(inputPicturePtr->bufferCr[inputCbOriginIndex]),
                     inputPicturePtr->strideCr,
                     &(candidateBuffer->reconPtr->bufferCr[tuChromaOriginIndex]),
@@ -972,7 +972,7 @@ void CuFullDistortionFastTuMode_R (
                     chromaTuSize,
                     chromaTuSize);
 
-                tuFullDistortion[2][DIST_CALC_PREDICTION] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & PREAVX2_MASK)][Log2f(chromaTuSize) - 2](
+                tuFullDistortion[2][DIST_CALC_PREDICTION] = SpatialFullDistortionKernel_funcPtrArray[!!(ASM_TYPES & AVX2_MASK)][Log2f(chromaTuSize) - 2](
                     &(inputPicturePtr->bufferCr[inputCbOriginIndex]),
                     inputPicturePtr->strideCr,
                     &(candidateBuffer->predictionPtr->bufferCr[tuChromaOriginIndex]),
@@ -984,7 +984,7 @@ void CuFullDistortionFastTuMode_R (
             else {
                 // *Full Distortion (SSE)
                 // *Note - there are known issues with how this distortion metric is currently
-                //    calculated.  The amount of scaling between the two arrays is not 
+                //    calculated.  The amount of scaling between the two arrays is not
                 //    equivalent.
                 PictureFullDistortion_R(
                     transformBuffer,
@@ -993,7 +993,7 @@ void CuFullDistortionFastTuMode_R (
                     candidateBuffer->reconCoeffPtr,
                     (tuSize >> contextPtr->pfMdMode),
                     (chromaTuSize >> correctedPFMode),
-                    PICTURE_BUFFER_DESC_CHROMA_MASK,//componentMask, 
+                    PICTURE_BUFFER_DESC_CHROMA_MASK,//componentMask,
                     tuFullDistortion[0],
                     tuFullDistortion[1],
                     tuFullDistortion[2],
@@ -1006,7 +1006,7 @@ void CuFullDistortionFastTuMode_R (
                 tuFullDistortion[1][DIST_CALC_PREDICTION] = (tuFullDistortion[1][DIST_CALC_PREDICTION] + (EB_U64)(1 << (chromaShift - 1))) >> chromaShift;
                 tuFullDistortion[2][DIST_CALC_RESIDUAL] = (tuFullDistortion[2][DIST_CALC_RESIDUAL] + (EB_U64)(1 << (chromaShift - 1))) >> chromaShift;
                 tuFullDistortion[2][DIST_CALC_PREDICTION] = (tuFullDistortion[2][DIST_CALC_PREDICTION] + (EB_U64)(1 << (chromaShift - 1))) >> chromaShift;
-            
+
             }
 
              TuEstimateCoeffBits_R(
@@ -1043,13 +1043,13 @@ void CuFullDistortionFastTuMode_R (
                 tuFullDistortion[0],
                 tuFullDistortion[1],
                 tuFullDistortion[2],
-                PICTURE_BUFFER_DESC_CHROMA_MASK,//componentMask, 
+                PICTURE_BUFFER_DESC_CHROMA_MASK,//componentMask,
                 &yTuCoeffBits,
                 &cbTuCoeffBits,
                 &crTuCoeffBits,
                 contextPtr->qp,
                 contextPtr->fullLambda,
-                contextPtr->fullChromaLambda);   
+                contextPtr->fullChromaLambda);
 
 			 *cbCoeffBits += cbTuCoeffBits;
              *crCoeffBits += crTuCoeffBits;
@@ -1166,7 +1166,7 @@ EB_U32 ExitInterDepthDecision(
 			&depthNRate,
 			fullLambda,
 			mdRateEstimationPtr,
-			tbMaxDepth); 
+			tbMaxDepth);
 		if (contextPtr->mdLocalCuUnit[depthTwoCandidateCuIndex].testedCuFlag == EB_FALSE)
 			contextPtr->mdLocalCuUnit[depthTwoCandidateCuIndex].cost = MAX_CU_COST;
 
@@ -1208,7 +1208,7 @@ EB_U32 ExitInterDepthDecision(
 
 	}
 
-	// Stage 1: Inter depth decision: depth 1 vs depth 2 
+	// Stage 1: Inter depth decision: depth 1 vs depth 2
 
 	// Walks to the last coded 16x16 block for merging
 	depthTwoCuStatsPtr = GetCodedUnitStats(depthTwoCandidateCuIndex);
@@ -1310,7 +1310,7 @@ EB_U32 ExitInterDepthDecision(
 		}
 	}
 
-	// Stage 2: Inter depth decision: depth 0 vs depth 1 
+	// Stage 2: Inter depth decision: depth 0 vs depth 1
 
 	// Walks to the last coded 32x32 block for merging
 	// Stage 2 isn't performed in I slices since the abcense of 64x64 candidates
@@ -1403,7 +1403,7 @@ EB_BOOL  StopSplitCondition(
     EB_BOOL stopSplitFlag = EB_TRUE;
 
     if ( pictureControlSetPtr->ParentPcsPtr->depthMode == PICT_FULL85_DEPTH_MODE ||
-         pictureControlSetPtr->ParentPcsPtr->depthMode == PICT_FULL84_DEPTH_MODE ||     
+         pictureControlSetPtr->ParentPcsPtr->depthMode == PICT_FULL84_DEPTH_MODE ||
          (pictureControlSetPtr->ParentPcsPtr->depthMode == PICT_LCU_SWITCH_DEPTH_MODE && (pictureControlSetPtr->ParentPcsPtr->lcuMdModeArray[lcuAddr] == LCU_FULL85_DEPTH_MODE || pictureControlSetPtr->ParentPcsPtr->lcuMdModeArray[lcuAddr] == LCU_FULL84_DEPTH_MODE || pictureControlSetPtr->ParentPcsPtr->lcuMdModeArray[lcuAddr] == LCU_AVC_DEPTH_MODE))
         ) {
 
@@ -1413,9 +1413,9 @@ EB_BOOL  StopSplitCondition(
         stopSplitFlag = EB_FALSE;
     }
     else{
-        if (sequenceControlSetPtr->staticConfig.qp >= 20    && 
-            pictureControlSetPtr->sliceType != EB_I_PICTURE      && 
-            pictureControlSetPtr->temporalLayerIndex == 0   && 
+        if (sequenceControlSetPtr->staticConfig.qp >= 20    &&
+            pictureControlSetPtr->sliceType != EB_I_PICTURE      &&
+            pictureControlSetPtr->temporalLayerIndex == 0   &&
             pictureControlSetPtr->ParentPcsPtr->logoPicFlag &&
             pictureControlSetPtr->ParentPcsPtr->edgeResultsPtr[lcuAddr].edgeBlockNum) {
 
@@ -1443,8 +1443,8 @@ EB_BOOL  StopSplitCondition(
             stopSplitFlag = (interSlice && (stopAtDepth0 || stopAtDepth1 || stopAtDepth2)) ? EB_TRUE : EB_FALSE;
 
             if  (!lcuParams->isCompleteLcu                                                        ||
-                 pictureControlSetPtr->ParentPcsPtr->lcuIsolatedNonHomogeneousAreaArray[lcuAddr] || 
-                 (sequenceControlSetPtr->inputResolution < INPUT_SIZE_4K_RANGE && pictureControlSetPtr->lcuPtrArray[lcuAddr]->auraStatus == AURA_STATUS_1)) { 
+                 pictureControlSetPtr->ParentPcsPtr->lcuIsolatedNonHomogeneousAreaArray[lcuAddr] ||
+                 (sequenceControlSetPtr->inputResolution < INPUT_SIZE_4K_RANGE && pictureControlSetPtr->lcuPtrArray[lcuAddr]->auraStatus == AURA_STATUS_1)) {
 
                 stopSplitFlag = EB_FALSE;
             }
@@ -1592,14 +1592,14 @@ EB_U32 ProductPerformInterDepthDecision(
 
 
     }
-    
-    // Stage 1: Inter depth decision: depth 1 vs depth 2 
-    
+
+    // Stage 1: Inter depth decision: depth 1 vs depth 2
+
     // Walks to the last coded 16x16 block for merging
     depthTwoCuStatsPtr = GetCodedUnitStats(depthTwoCandidateCuIndex);
     cuOriginX  = tbOriginX + depthTwoCuStatsPtr->originX;
     cuOriginY  = tbOriginY + depthTwoCuStatsPtr->originY;
-    if (GROUP_OF_4_16x16_BLOCKS(cuOriginX, cuOriginY) && 
+    if (GROUP_OF_4_16x16_BLOCKS(cuOriginX, cuOriginY) &&
         (contextPtr->groupOf8x8BlocksCount == 4 ) ){
 
         depthOneCandidateCuIndex = depthTwoCandidateCuIndex - DEPTH_TWO_STEP - DEPTH_TWO_STEP - DEPTH_TWO_STEP - 1;
@@ -1695,7 +1695,7 @@ EB_U32 ProductPerformInterDepthDecision(
         }
     }
 
-    // Stage 2: Inter depth decision: depth 0 vs depth 1 
+    // Stage 2: Inter depth decision: depth 0 vs depth 1
 
     // Walks to the last coded 32x32 block for merging
     // Stage 2 isn't performed in I slices since the abcense of 64x64 candidates
@@ -1703,7 +1703,7 @@ EB_U32 ProductPerformInterDepthDecision(
     cuOriginX  = tbOriginX + depthTwoCuStatsPtr->originX;
     cuOriginY  = tbOriginY + depthTwoCuStatsPtr->originY;
     if ((pictureControlSetPtr->sliceType == EB_P_PICTURE || pictureControlSetPtr->sliceType == EB_B_PICTURE )
-        && GROUP_OF_4_32x32_BLOCKS(cuOriginX, cuOriginY) && 
+        && GROUP_OF_4_32x32_BLOCKS(cuOriginX, cuOriginY) &&
         (contextPtr->groupOf16x16BlocksCount == 4)) {
 
         depthZeroCandidateCuIndex = depthOneCandidateCuIndex - DEPTH_ONE_STEP - DEPTH_ONE_STEP - DEPTH_ONE_STEP - 1;
@@ -1725,10 +1725,10 @@ EB_U32 ProductPerformInterDepthDecision(
 
         // From the top left index, get the index of the candidate pu for merging
         depthZeroCandidateCuIndex = topLeftCuIndex - 1;
-        
+
         depthZeroCuStatsPtr = GetCodedUnitStats(depthZeroCandidateCuIndex);
         if (depthZeroCuStatsPtr->depth == 0) {
-            
+
             // Compute depth N cost
 			SplitFlagRate(
 				contextPtr,
@@ -1902,7 +1902,7 @@ EB_U32 PillarInterDepthDecision(
 
     }
 
-    // Stage 1: Inter depth decision: depth 1 vs depth 2 
+    // Stage 1: Inter depth decision: depth 1 vs depth 2
 
     // Walks to the last coded 16x16 block for merging
     depthTwoCuStatsPtr = GetCodedUnitStats(depthTwoCandidateCuIndex);
@@ -2003,7 +2003,7 @@ EB_U32 PillarInterDepthDecision(
         }
     }
 
-    // Stage 2: Inter depth decision: depth 0 vs depth 1 
+    // Stage 2: Inter depth decision: depth 0 vs depth 1
 
     // Walks to the last coded 32x32 block for merging
     // Stage 2 isn't performed in I slices since the abcense of 64x64 candidates
