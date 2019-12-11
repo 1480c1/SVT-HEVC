@@ -5,6 +5,10 @@ if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
                     "Please use the Build folder or create your own.")
 endif()
 
+if(NOT CMAKE_BUILD_TYPE AND NOT (MSVC OR CMAKE_GENERATOR STREQUAL "Xcode"))
+    set(CMAKE_BUILD_TYPE Release)
+endif()
+
 option(YASM "Use yasm (if present in PATH)" ON)
 if(YASM)
     find_program(YASM_EXE yasm)
@@ -21,9 +25,6 @@ if(COMPILE_AS_CPP)
     include(CheckCXXCompilerFlag)
 endif()
 
-if(NOT MSVC AND NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
 
 include(GNUInstallDirs)
 include(CheckCCompilerFlag)
