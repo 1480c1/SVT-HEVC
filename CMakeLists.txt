@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 2.8.12)
-set(project_name "svt-hevc")
 
 if("${CMAKE_CURRENT_SOURCE_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
     message(WARNING "Building in-source is highly not recommended\n"
@@ -11,7 +10,7 @@ if(YASM_EXE AND NOT CMAKE_ASM_NASM_COMPILER MATCHES "yasm")
     set(CMAKE_ASM_NASM_COMPILER ${YASM_EXE})
 endif()
 
-project(${project_name} C ASM_NASM)
+project(svt-hevc C ASM_NASM)
 
 option(COMPILE_AS_CPP "Compile C Source files with a CPP compiler")
 if(COMPILE_AS_CPP)
