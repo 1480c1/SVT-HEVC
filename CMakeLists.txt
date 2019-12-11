@@ -24,7 +24,16 @@ set(SVT_HEVC_VERSION_MINOR           "4")
 set(SVT_HEVC_VERSION_PATCHLEVEL      "2")
 set(SVT_HEVC_VERSION "${SVT_HEVC_VERSION_MAJOR}.${SVT_HEVC_VERSION_MINOR}.${SVT_HEVC_VERSION_PATCHLEVEL}")
 
-option(COMPILE_AS_CPP "Compile C Source files with a CPP compiler")
+# BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to
+# make it prominent in the GUI.
+option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." ON)
+option(COVERAGE "Generate coverage report")
+option(BUILD_APP "Build Enc App" ON)
+option(COMPILE_AS_CPP "Compile C Source files with a c++ compiler")
+if(NOT MSVC)
+    option(NATIVE "Build for native performance (march=native)")
+endif()
+
 if(COMPILE_AS_CPP)
     enable_language(CXX)
     include(CheckCXXCompilerFlag)
@@ -111,7 +120,6 @@ set(flags_to_test
 if(MSVC)
     list(APPEND flags_to_test /MP)
 else()
-    option(NATIVE "Build for native performance (march=native)")
     list(INSERT flags_to_test 0 -Wall)
     #for Mingw64 support, see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=65782
     if(MINGW)
@@ -183,12 +191,6 @@ else()
         set(CMAKE_ASM_NASM_FLAGS_DEBUG "${CMAKE_ASM_NASM_FLAGS_DEBUG} -gdwarf2")
     endif()
 endif()
-
-# BUILD_SHARED_LIBS is a standard CMake variable, but we declare it here to
-# make it prominent in the GUI.
-option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." ON)
-option(COVERAGE "Generate coverage report")
-option(BUILD_APP "Build Enc App" ON)
 
 # Prepare for Coveralls
 if(COVERAGE AND NOT MSVC)
