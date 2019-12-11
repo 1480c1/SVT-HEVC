@@ -17,17 +17,20 @@ if(YASM)
     endif()
 endif()
 
-project(svt-hevc C ASM_NASM)
+project(svt-hevc)
 
 option(COMPILE_AS_CPP "Compile C Source files with a CPP compiler")
 if(COMPILE_AS_CPP)
     enable_language(CXX)
     include(CheckCXXCompilerFlag)
+else()
+    enable_language(C)
+    include(CheckCCompilerFlag)
 endif()
 
+enable_language(ASM_NASM)
 
 include(GNUInstallDirs)
-include(CheckCCompilerFlag)
 
 message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
 message(STATUS "CMAKE_C_COMPILER = ${CMAKE_C_COMPILER}")
