@@ -44,6 +44,10 @@ endif()
 
 enable_language(ASM_NASM)
 
+if(NOT CMAKE_SIZEOF_VOID_P EQUAL 8)
+    message(WARNING "32-bit is not supported")
+endif()
+
 include(GNUInstallDirs)
 
 message(STATUS "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}")
