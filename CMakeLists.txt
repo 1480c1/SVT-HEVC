@@ -77,6 +77,7 @@ else()
 endif()
 
 configure_file(${PROJECT_SOURCE_DIR}/Source/API/EbApiVersion.h.in EbApiVersion.h @ONLY)
+include_directories(${CMAKE_BINARY_DIR})
 
 function(test_compiler_flags)
     foreach(flag ${ARGN})
